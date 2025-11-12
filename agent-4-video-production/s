@@ -1,0 +1,11 @@
+﻿s
+        """
+        if output_prefix is None:
+            timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+            output_prefix = f"production_{timestamp}"
+
+        saved_paths = {}
+
+        try:
+            # Save Veo prompts
+            veo_

@@ -1,0 +1,82 @@
+# Makefile for Suno Prompt Generator Agent
+# Google Cloud Vertex AI Agent Development Kit (ADK)
+
+PROJECT_ID = musikvideo-prompt-agent
+REGION = us-central1
+AGENT_NAME = suno-prompt-generator
+DISPLAY_NAME = "Suno Prompt Generator"
+STAGING_BUCKET = gs://$(PROJECT_ID)-agent-staging
+
+.PHONY: help install playground deploy test test-all test-single clean setup-bucket init
+
+help:
+	@echo "Suno Prompt Generator - ADK Deployment Commands"
+	@echo ""
+	@echo "Available targets:"
+	@echo "  make setup-bucket  - Create GCS staging bucket"
+	@echo "  make install       - Install Python dependencies"
+	@echo "  make playground    - Run ADK playground for local testing"
+	@echo "  make test          - Test agent locally"
+	@echo "  make test-all      - Test all genres"
+	@echo "  make test-single   - Test single genre with mood"
+	@echo "  make deploy        - Deploy agent to Vertex AI Agent Engine"
+	@echo "  make clean         - Clean temporary files"
+	@echo ""
+
+install:
+	@echo "Installing dependencies..."
+	pip install -r requirements.txt
+	@echo "Dependencies installed successfully!"
+
+setup-bucket:
+	@echo "Setting up GCS staging bucket..."
+	-gsutil mb -p $(PROJECT_ID) -l $(REGION) $(STAGING_BUCKET)
+	@echo "Staging bucket ready!"
+
+playground:
+	@echo "Starting ADK playground..."
+	@echo "Open your browser to test the agent interactively"
+	adk web
+
+test:
+	@echo "Testing Suno Prompt Generator..."
+	python agent.py
+
+test-all:
+	@echo "Testing all genres..."
+	python -c "from agent import generate_suno_prompts; import json; print(json.dumps(generate_suno_prompts(), indent=2))"
+
+test-single:
+	@echo "Testing single genre with mood..."
+	python -c "from agent import generate_genre_prompt; import json; print(json.dumps(generate_genre_prompt('Reggaeton', mood='uplifting and celebratory'), indent=2))"
+
+deploy: setup-bucket
+	@echo "Deploying $(DISPLAY_NAME) to Vertex AI Agent Engine..."
+	@echo "Project: $(PROJECT_ID)"
+	@echo "Region: $(REGION)"
+	@echo "Staging Bucket: $(STAGING_BUCKET)"
+	adk deploy agent_engine \
+		--project=$(PROJECT_ID) \
+		--region=$(REGION) \
+		--staging_bucket=$(STAGING_BUCKET) \
+		--display_name=$(DISPLAY_NAME) \
+		--requirements_file=requirements.txt \
+		.
+	@echo "Deployment complete!"
+	@echo "Check Google Cloud Console: https://console.cloud.google.com/vertex-ai/agents/agent-engines?project=$(PROJECT_ID)"
+
+clean:
+	@echo "Cleaning temporary files..."
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type f -name "*.pyc" -delete
+	find . -type f -name "*.pyo" -delete
+	find . -type f -name ".DS_Store" -delete
+	@echo "Cleanup complete!"
+
+init:
+	@echo "Creating .env file..."
+	@echo "GOOGLE_GENAI_USE_VERTEXAI=1" > .env
+	@echo "GOOGLE_CLOUD_PROJECT=$(PROJECT_ID)" >> .env
+	@echo "GOOGLE_CLOUD_LOCATION=$(REGION)" >> .env
+	@echo ".env file created!"
+	@echo "Please review and update if needed."
