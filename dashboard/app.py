@@ -1,4 +1,5 @@
-﻿from flask import Flask, render_template, jsonify
+# -*- coding: utf-8 -*-
+from flask import Flask, render_template, jsonify
 from flask_cors import CORS
 import json
 import os

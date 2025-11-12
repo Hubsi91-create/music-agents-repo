@@ -1,11 +1,11 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import json
 import sys
 from datetime import datetime
 
 def generate_metadata(title="Electronic Cinematic Mix", genre="Electronic", mood="cinematic, professional"):
     """Generiere YouTube + Social Media Metadata."""
-    
+
     # YouTube Metadata
     youtube_meta = {
         "title": f"{title} | {genre} | {mood}",
@@ -26,7 +26,7 @@ Follow us on social: [Instagram] [TikTok] [Twitter]
         "category": "Music",
         "language": "en"
     }
-    
+
     # Social Media Posts
     social_posts = {
         "instagram": f"""🎵 NEW DROP ALERT 🎵
@@ -41,12 +41,12 @@ Now available on YouTube! 🔗
 Link in bio ↗️
 
 #{genre.replace(' ', '')} #MusicVideo #ElectronicMusic #NewMusic""",
-        
+
         "tiktok": f"""POV: You just found the sickest electronic track 🎵
 {title} OUT NOW
 Link in bio 🔗
 #foryou #electronic #musicvideo #newmusic""",
-        
+
         "twitter": f"""🔥 NEW MUSIC 🔥
 
 {title}
@@ -56,12 +56,12 @@ Streaming now on YouTube ▶️
 [Link]
 
 #MusicProduction #{genre.replace(' ', '')} #NewMusic""",
-        
+
         "youtube_short": f"""🎵 {title}
 Genre: {genre}
 Full video on my channel! ▶️"""
     }
-    
+
     # Email Templates
     email_templates = {
         "influencer_outreach": f"""Subject: Collaboration Opportunity - Your Channel Featured!
@@ -80,7 +80,7 @@ We'd love to collaborate on future projects!
 
 Best regards,
 [Your Name]""",
-        
+
         "media_pitch": f"""Subject: New Music Release - {title}
 
 Hi [Media Contact],
@@ -97,7 +97,7 @@ Perfect for playlists: #NewMusic #Electronic #Cinematic
 
 Regards"""
     }
-    
+
     return {
         "timestamp": datetime.now().isoformat(),
         "content": {
@@ -117,12 +117,12 @@ Regards"""
 
 def main():
     print("[Agent 7b] Metadata Generator")
-    
+
     result = generate_metadata()
-    
+
     with open('metadata.json', 'w', encoding='utf-8') as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
-    
+
     print(f"[SUCCESS] Metadata für YouTube, Instagram, TikTok, Twitter generiert!")
     print(f"[EMAIL TEMPLATES] 2x Email Vorlagen erstellt!")
     print(f"[SEO] Optimiert für Google & YouTube!")

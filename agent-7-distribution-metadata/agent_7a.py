@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import json
 import sys
 from datetime import datetime
@@ -11,15 +11,15 @@ def analyze_influencers(influencers_file="../agent-6-influencer-matcher/influenc
     except FileNotFoundError:
         print("[ERROR] influencers.json nicht gefunden!")
         sys.exit(1)
-    
+
     influencers = data.get('influencers', [])
-    
+
     # Ranking & Scoring
     recommendations = []
     for inf in influencers:
         subs = int(inf.get('subscribers', '0').replace(',', '')) if isinstance(inf.get('subscribers'), str) else 0
         views = int(inf.get('views', '0').replace(',', '')) if isinstance(inf.get('views'), str) else 0
-        
+
         # Berechne Collaboration Score (0-100)
         if subs > 0:
             engagement_ratio = (views / (subs * 10)) if subs > 0 else 0
@@ -28,7 +28,7 @@ def analyze_influencers(influencers_file="../agent-6-influencer-matcher/influenc
             collaboration_score = (reach_score * 0.6) + (engagement_score * 0.4)
         else:
             collaboration_score = 0
-        
+
         rec = {
             "rank": inf.get('rank', 0),
             "channel_name": inf.get('channel_name', ''),
@@ -44,13 +44,13 @@ def analyze_influencers(influencers_file="../agent-6-influencer-matcher/influenc
             "url": inf.get('url', '')
         }
         recommendations.append(rec)
-    
+
     # Sortiere nach Collaboration Score
     recommendations = sorted(recommendations, key=lambda x: x['collaboration_score'], reverse=True)
-    
+
     # Top 5
     top_5 = recommendations[:5]
-    
+
     return {
         "timestamp": datetime.now().isoformat(),
         "total_influencers": len(influencers),
@@ -66,13 +66,13 @@ def analyze_influencers(influencers_file="../agent-6-influencer-matcher/influenc
 
 def main():
     print("[Agent 7a] Analytics & Distribution Strategy")
-    
+
     result = analyze_influencers()
-    
+
     # Speichere Result
     with open('distribution_strategy.json', 'w', encoding='utf-8') as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
-    
+
     print(f"[SUCCESS] {result['total_influencers']} Influencer analysiert!")
     print(f"[TOP 5] Collaboration Partners identifiziert!")
     print(f"[SAVED] Ergebnisse in: distribution_strategy.json")
