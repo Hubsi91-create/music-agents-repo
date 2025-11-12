@@ -1,0 +1,69 @@
+﻿[2025-11-12 01:05:48] [INFO] AGENT 10 - MASTER AND DISTRIBUTOR
+[2025-11-12 01:05:48] [INFO] PowerShell Version: 2025.4.0
+[2025-11-12 01:05:48] [INFO] Action: install
+[2025-11-12 01:05:48] [INFO] Mode: INSTALLATION
+[2025-11-12 01:05:48] [INFO] AGENT 10 INSTALLATION STARTED
+[2025-11-12 01:05:48] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\mastering
+[2025-11-12 01:05:48] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\metadata
+[2025-11-12 01:05:48] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\distribution
+[2025-11-12 01:05:48] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\analytics
+[2025-11-12 01:05:48] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\output\youtube
+[2025-11-12 01:05:48] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\output\tiktok
+[2025-11-12 01:05:48] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\output\instagram
+[2025-11-12 01:05:48] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\output\spotify
+[2025-11-12 01:05:48] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\output\netflix
+[2025-11-12 01:05:48] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\output\logs
+[2025-11-12 01:05:48] [SUCCESS] Created requirements.txt
+[2025-11-12 01:05:48] [INFO] Installing Python packages...
+Defaulting to user installation because normal site-packages is not writeable
+Collecting ffmpeg-python (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 1))
+  Downloading ffmpeg_python-0.2.0-py3-none-any.whl.metadata (1.7 kB)
+Collecting Pillow (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 2))
+  Downloading pillow-12.0.0-cp313-cp313-win_amd64.whl.metadata (9.0 kB)
+Collecting pymediainfo (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 3))
+  Downloading pymediainfo-7.0.1-py3-none-win_amd64.whl.metadata (9.0 kB)
+Requirement already satisfied: requests in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 4)) (2.32.5)
+Requirement already satisfied: pyYAML in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 5)) (6.0.3)
+Requirement already satisfied: colorama in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 6)) (0.4.6)
+Collecting mutagen (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 7))
+  Downloading mutagen-1.47.0-py3-none-any.whl.metadata (1.7 kB)
+Collecting future (from ffmpeg-python->-r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 1))
+  Downloading future-1.0.0-py3-none-any.whl.metadata (4.0 kB)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from requests->-r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 4)) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from requests->-r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 4)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from requests->-r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 4)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from requests->-r C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\requirements.txt (line 4)) (2025.10.5)
+Downloading ffmpeg_python-0.2.0-py3-none-any.whl (25 kB)
+Downloading pillow-12.0.0-cp313-cp313-win_amd64.whl (7.0 MB)
+   ---------------------------------------- 7.0/7.0 MB 8.4 MB/s  0:00:00
+Downloading pymediainfo-7.0.1-py3-none-win_amd64.whl (3.3 MB)
+   ---------------------------------------- 3.3/3.3 MB 8.4 MB/s  0:00:00
+Downloading mutagen-1.47.0-py3-none-any.whl (194 kB)
+Downloading future-1.0.0-py3-none-any.whl (491 kB)
+Installing collected packages: pymediainfo, Pillow, mutagen, future, ffmpeg-python
+pip :   WARNING: The scripts mid3cp.exe, mid3iconv.exe, mid3v2.exe, moggsplit.exe, mutagen-inspect.exe and mutagen-pony.exe are 
+installed in 
+'C:\Users\Hubsi\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\Scripts' 
+which is not on PATH.
+In C:\Users\Hubsi\Music\music-agents-repo\agent-10-master-distributor\deploy.ps1:18 Zeichen:1
++ pip install -r $reqFile 2>&1 | Out-File -FilePath $logFile -Append -E ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  WARNING: The ...is not on PATH.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts futurize.exe and pasteurize.exe are installed in 
+'C:\Users\Hubsi\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\Scripts' 
+which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+
+Successfully installed Pillow-12.0.0 ffmpeg-python-0.2.0 future-1.0.0 mutagen-1.47.0 pymediainfo-7.0.1
+
+[notice] A new release of pip is available: 25.2 -> 25.3
+[notice] To update, run: 
+C:\Users\Hubsi\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe -m pip install 
+--upgrade pip
+[2025-11-12 01:05:54] [SUCCESS] Python dependencies installed
+[2025-11-12 01:05:54] [SUCCESS] INSTALLATION COMPLETE
+[2025-11-12 01:05:54] [SUCCESS] Agent 10 is ready to use!
+[2025-11-12 01:05:54] [SUCCESS] Script completed
