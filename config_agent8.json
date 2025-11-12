@@ -1,0 +1,313 @@
+{
+  "system_config": {
+    "agent_name": "Agent 8 - Prompt Refiner & Validator",
+    "version": "1.0",
+    "implementation_style": "python_module",
+    "deployment_target": "google_cloud",
+    "auto_fix_aggressiveness": "balanced",
+    "feedback_loop_mode": "hybrid_single_interactive"
+  },
+
+  "genres": [
+    {
+      "id": "reggaeton",
+      "display_name": "Reggaeton",
+      "aliases": ["reggaeton", "perreo", "trap_latino"],
+      "color_temp": 5800,
+      "saturation_boost": 18,
+      "contrast_profile": "warm",
+      "camera_style": "smooth_dolly",
+      "dialog_max_words": 7,
+      "auto_negatives": [
+        "no sudden color shifts",
+        "maintain warm tones",
+        "no harsh shadows"
+      ],
+      "veo_preferred_mode": "standard",
+      "runway_preferred_mode": "standard"
+    },
+    {
+      "id": "edm",
+      "display_name": "EDM / Electronic",
+      "aliases": ["edm", "house", "techno", "progressive_house"],
+      "color_temp": 7500,
+      "saturation_boost": 40,
+      "contrast_profile": "high_neon",
+      "camera_style": "dynamic_tracking",
+      "dialog_max_words": 3,
+      "auto_negatives": [
+        "no dimming",
+        "maintain neon brightness",
+        "no washed colors"
+      ],
+      "veo_preferred_mode": "fast",
+      "runway_preferred_mode": "turbo"
+    },
+    {
+      "id": "hiphop",
+      "display_name": "Hip-Hop / Trap",
+      "aliases": ["hiphop", "trap", "boom_bap"],
+      "color_temp": 4800,
+      "saturation_boost": -15,
+      "contrast_profile": "high_noir",
+      "camera_style": "static_slow",
+      "dialog_max_words": 6,
+      "auto_negatives": [
+        "maintain high contrast",
+        "no washed colors",
+        "no color banding"
+      ],
+      "veo_preferred_mode": "standard",
+      "runway_preferred_mode": "standard"
+    },
+    {
+      "id": "pop",
+      "display_name": "Pop",
+      "aliases": ["pop", "synth_pop", "electropop"],
+      "color_temp": 6200,
+      "saturation_boost": 22,
+      "contrast_profile": "bright_polished",
+      "camera_style": "smooth_cinematic",
+      "dialog_max_words": 8,
+      "auto_negatives": [
+        "maintain vibrant colors",
+        "no clipping",
+        "keep skin tones natural"
+      ],
+      "veo_preferred_mode": "standard",
+      "runway_preferred_mode": "standard"
+    },
+    {
+      "id": "rb_soul",
+      "display_name": "R&B / Soul",
+      "aliases": ["rb", "soul", "neo_soul"],
+      "color_temp": 3800,
+      "saturation_boost": -8,
+      "contrast_profile": "warm_intimate",
+      "camera_style": "slow_intimate",
+      "dialog_max_words": 7,
+      "auto_negatives": [
+        "maintain warmth",
+        "no harsh lighting",
+        "keep intimate feel"
+      ],
+      "veo_preferred_mode": "standard",
+      "runway_preferred_mode": "standard"
+    }
+  ],
+
+  "validation_layers": {
+    "structural": {
+      "weight": 0.25,
+      "veo_checks": [
+        "has_all_6_layers",
+        "word_count_75_to_150",
+        "clear_structure"
+      ],
+      "runway_checks": [
+        "motion_focused",
+        "word_count_50_to_100",
+        "simplicity_high"
+      ]
+    },
+    "genre_compliance": {
+      "weight": 0.25,
+      "checks": [
+        "genre_detected",
+        "genre_params_correct",
+        "color_temp_range_ok",
+        "saturation_boost_aligned"
+      ]
+    },
+    "artifact_detection": {
+      "weight": 0.30,
+      "veo_risks": {
+        "dialog_exceeds_7_words": "regex: count_words(dialogue_line) > 7",
+        "too_many_audio_elements": "regex: audio_elements > 3",
+        "conflicting_light": "regex: ['sunlight'|'day'] AND ['night'|'dark']",
+        "too_many_camera_moves": "regex: camera_movements > 2",
+        "missing_negatives": "regex: negatives_count < 3",
+        "ambiguous_timing": "regex: ['approximately'|'somewhere'|'around']"
+      },
+      "runway_risks": {
+        "image_prompt_mismatch": "manual_check: prompt != image_content",
+        "prompt_too_long": "word_count > 100 AND image_is_clear",
+        "artsy_language": "regex: ['ethereal'|'dreamlike'|'whimsical'|'mystical']",
+        "simultaneous_actions": "sentence_actions > 2 AND 'while' OR 'and' simultaneous",
+        "missing_motion_anchors": "multi_shot AND NOT 'continues' keyword",
+        "contradicting_descriptions": "conflicting_adjectives > 1"
+      }
+    },
+    "consistency": {
+      "weight": 0.15,
+      "checks": [
+        "character_lock_consistent",
+        "wardrobe_identical",
+        "palette_locked",
+        "audio_continuity_good",
+        "motion_continuity_good"
+      ]
+    },
+    "performance_optimization": {
+      "weight": 0.05,
+      "checks": [
+        "mode_complexity_aligned",
+        "reference_images_defined",
+        "negatives_included",
+        "duration_correct"
+      ]
+    }
+  },
+
+  "auto_fix_rules": {
+    "veo_3_1": {
+      "too_long_dialog": {
+        "trigger": "dialog > 7 words",
+        "severity": "critical",
+        "fix_type": "auto",
+        "logic": "trim_to_max_words(7)",
+        "confidence": 0.95
+      },
+      "conflicting_light": {
+        "trigger": "regex: ['sun'|'day'] AND ['night'|'dark']",
+        "severity": "critical",
+        "fix_type": "manual_review_required",
+        "logic": "flag_for_user_choice",
+        "confidence": 0.70
+      },
+      "too_many_camera_moves": {
+        "trigger": "camera_movements > 2",
+        "severity": "warning",
+        "fix_type": "auto",
+        "logic": "keep_primary_2_moves",
+        "confidence": 0.85
+      },
+      "missing_negatives": {
+        "trigger": "negatives_count < 3",
+        "severity": "warning",
+        "fix_type": "auto",
+        "logic": "add_base_negatives_plus_genre_specific",
+        "base_negatives": ["no warped face", "no floating limbs", "no watermark"],
+        "confidence": 0.95
+      },
+      "ambiguous_timing": {
+        "trigger": "regex: ['approximately'|'somewhere'|'around']",
+        "severity": "info",
+        "fix_type": "auto",
+        "logic": "convert_to_precise_timing",
+        "confidence": 0.80
+      }
+    },
+    "runway_gen4": {
+      "prompt_too_long": {
+        "trigger": "word_count > 100 AND image_clear",
+        "severity": "warning",
+        "fix_type": "auto",
+        "logic": "trim_to_50_80_words",
+        "confidence": 0.85
+      },
+      "artsy_language": {
+        "trigger": "regex: ['ethereal'|'dreamlike'|'whimsical'|'mystical']",
+        "severity": "warning",
+        "fix_type": "auto",
+        "logic": "replace_with_concrete_terms",
+        "replacements": {
+          "ethereal": "soft-focused",
+          "dreamlike": "blurred, hazy",
+          "whimsical": "playful, animated",
+          "mystical": "atmospheric, moody"
+        },
+        "confidence": 0.90
+      },
+      "simultaneous_actions": {
+        "trigger": "sentence_actions > 2 AND simultaneous_keywords",
+        "severity": "warning",
+        "fix_type": "auto",
+        "logic": "convert_to_sequential",
+        "confidence": 0.80
+      },
+      "missing_motion_anchors": {
+        "trigger": "multi_shot AND NOT 'continues' keyword",
+        "severity": "warning",
+        "fix_type": "auto",
+        "logic": "add_continues_keyword",
+        "confidence": 0.85
+      }
+    }
+  },
+
+  "quality_scoring": {
+    "formula": "weighted_average",
+    "calculation": "(structural × 0.25) + (genre × 0.25) + (artifacts × 0.30) + (consistency × 0.15) + (performance × 0.05)",
+    "score_ranges": {
+      "production_ready": {
+        "min": 0.90,
+        "max": 1.00,
+        "stars": 5,
+        "action": "generate_immediately",
+        "manual_review": false
+      },
+      "good": {
+        "min": 0.80,
+        "max": 0.89,
+        "stars": 4,
+        "action": "generate_with_note",
+        "manual_review": false
+      },
+      "fair": {
+        "min": 0.70,
+        "max": 0.79,
+        "stars": 3,
+        "action": "offer_refinement",
+        "manual_review": true
+      },
+      "poor": {
+        "min": 0.60,
+        "max": 0.69,
+        "stars": 2,
+        "action": "require_rewrite",
+        "manual_review": true
+      },
+      "critical": {
+        "min": 0.00,
+        "max": 0.59,
+        "stars": 1,
+        "action": "reject_completely",
+        "manual_review": true
+      }
+    },
+    "ready_for_generation": "score > 0.75 AND critical_artifacts == 0"
+  },
+
+  "feedback_loop": {
+    "mode": "hybrid",
+    "single_pass": {
+      "threshold": 0.80,
+      "action": "output_immediately",
+      "description": "Wenn Score > 0.80, direkt generieren"
+    },
+    "interactive": {
+      "threshold": 0.70,
+      "action": "offer_refinement_options",
+      "max_iterations": 3,
+      "description": "Wenn Score 0.70-0.80, Benutzer kann Variationen anfragen"
+    },
+    "reject": {
+      "threshold": 0.60,
+      "action": "request_manual_rewrite",
+      "description": "Wenn Score < 0.60, Agent 8 schlägt Rewrite vor"
+    }
+  },
+
+  "perplexity_integration": {
+    "enabled": true,
+    "update_frequency": "monthly",
+    "trigger_date": "first_monday_of_month",
+    "deep_research_query": "Latest VEO 3.1 and Runway Gen-4 prompt optimization best practices 2025",
+    "update_targets": [
+      "artifact_detection_rules",
+      "genre_parameters",
+      "auto_fix_logic"
+    ]
+  }
+}

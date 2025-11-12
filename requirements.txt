@@ -1,0 +1,24 @@
+# AGENT 8: PROMPT REFINER & VALIDATOR
+# Python Dependencies for Google Cloud Deployment
+# Stand: 12. November 2025
+# Requires: Python 3.9 or higher
+
+# Google Cloud Functions
+functions-framework>=3.5.0
+flask>=3.0.0
+
+# Data Processing
+python-dateutil>=2.8.2
+
+# Testing (optional, for local development)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code Quality (optional, for local development)
+black>=23.10.0
+flake8>=6.1.0
+mypy>=1.6.0
+
+# Google Cloud SDK (for deployment)
+google-cloud-core>=2.3.3
+google-cloud-storage>=2.10.0
