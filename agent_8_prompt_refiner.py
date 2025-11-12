@@ -383,9 +383,10 @@ class Agent8PromptRefiner:
                 if issue.message.startswith("Dialog exceeds"):
                     # Fix: Trim dialog
                     old = refined
+                    max_words = genre_config["dialog_max_words"]
                     refined = re.sub(
                         r'Dialogue:\s*"([^"]+)"',
-                        lambda m: f'Dialogue: "{" ".join(m.group(1).split()[:genre_config["dialog_max_words"]])"',
+                        lambda m: 'Dialogue: "{}"'.format(" ".join(m.group(1).split()[:max_words])),
                         refined
                     )
                     if old != refined:

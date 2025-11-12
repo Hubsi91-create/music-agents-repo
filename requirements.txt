@@ -1,9 +1,7 @@
 # AGENT 8: PROMPT REFINER & VALIDATOR
 # Python Dependencies for Google Cloud Deployment
 # Stand: 12. November 2025
-
-# Core Dependencies
-python>=3.9
+# Requires: Python 3.9 or higher
 
 # Google Cloud Functions
 functions-framework>=3.5.0
