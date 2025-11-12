@@ -1,14 +1,11 @@
 """
-AGENT 8 ↔ STORYBOARD APP BRIDGE
-Connects Agent 8 with existing Storyboard App
-Provides 4 APIs for metrics and feedback integration
-
-Stand: 12. November 2025
-Version: 1.0
+Agent 8 Storyboard Integration Bridge
+4 APIs for connecting Storyboard App with Agent 8 training system
+Stand: 12.11.2025
 """
 
 import json
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 from datetime import datetime
 import logging
 
@@ -20,40 +17,24 @@ logger = logging.getLogger(__name__)
 
 
 class Agent8StoryboardBridge:
-    """
-    Bridge between Agent 8 and Storyboard App
-
-    Provides 4 APIs:
-    1. validate_prompt_from_storyboard() - Storyboard UI → Agent 8
-    2. send_generation_feedback() - Agent 5c/5d → Agent 8
-    3. get_dashboard_data() - Dashboard display
-    4. send_manual_feedback() - User feedback
-    """
+    """Bridge between Storyboard App and Agent 8"""
 
     def __init__(
         self,
         config_path: str = "config_agent8.json",
-        metrics_db_path: str = "data/agent_8_metrics.json"
+        metrics_db: str = "data/agent_8_metrics.json"
     ):
-        """
-        Initialize the bridge
-
-        Args:
-            config_path: Path to Agent 8 config file
-            metrics_db_path: Path to metrics database
-        """
         try:
-            self.metrics = Agent8MetricsCollector(metrics_db_path)
+            self.metrics = Agent8MetricsCollector(metrics_db)
             self.agent8 = Agent8PromptRefiner(config_path)
-            logger.info("✅ Agent8StoryboardBridge initialized successfully")
-
+            logger.info("✅ Agent8StoryboardBridge initialized")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize bridge: {e}")
+            logger.error(f"❌ Init failed: {e}")
             raise
 
-    # ============================================
-    # API 1: STORYBOARD → AGENT 8 (Validation)
-    # ============================================
+    # ═══════════════════════════════════════════════════════════════════════
+    # API 1: VALIDATE FROM STORYBOARD
+    # ═══════════════════════════════════════════════════════════════════════
 
     def validate_prompt_from_storyboard(
         self,
@@ -63,109 +44,56 @@ class Agent8StoryboardBridge:
         storyboard_scene_id: str
     ) -> Dict:
         """
-        Validate a prompt from Storyboard App
+        Validate prompt from Storyboard UI
 
-        Called when user creates a prompt in Storyboard UI and clicks "Validate"
-
-        Flow:
-        1. User creates prompt in Storyboard UI
-        2. Click "Validate" button
-        3. This function is called
-        4. Agent 8 validates the prompt
-        5. Results + Metrics returned to Storyboard
-
-        Args:
-            prompt: The prompt to validate
-            prompt_type: "veo_3.1" or "runway_gen4"
-            genre: Genre identifier (reggaeton, edm, etc.)
-            storyboard_scene_id: Reference to storyboard scene
+        Called when user clicks "Validate" button
 
         Returns:
-            Dict containing validation results, refined prompt, and metrics
+            Dict with validation results, refined prompt, metrics
         """
         try:
-            logger.info(
-                f"🔍 Validating prompt from storyboard scene {storyboard_scene_id}: "
-                f"{genre} ({prompt_type})"
-            )
+            logger.info(f"🔍 Validating: {genre} ({prompt_type})")
 
-            # Validate prompt with Agent 8
+            # Run Agent 8 validation
             report = self.agent8.validate_and_refine(prompt, prompt_type, genre)
 
-            # Record validation in metrics
-            validation_record = self.metrics.record_validation(
+            # Record in metrics
+            val_id = self.metrics.record_validation(
                 prompt=prompt,
                 prompt_type=prompt_type,
                 genre=genre,
                 quality_score=report.validation_scores.overall_quality_score,
-                issues_found=[i.message for i in report.issues_found],
-                fixes_applied=[f.fix_type for f in report.auto_fixes_applied],
-                ready_for_generation=report.ready_for_generation,
+                issues=[i.message for i in report.issues_found],
+                fixes=[f.fix_type for f in report.auto_fixes_applied],
+                ready=report.ready_for_generation,
                 storyboard_id=storyboard_scene_id
             )
 
-            # Prepare response for Storyboard UI
-            response = {
+            return {
                 "status": "success",
-                "validation_id": validation_record["id"],
-
-                # Validation results
+                "validation_id": val_id,
                 "validation": {
                     "quality_score": report.validation_scores.overall_quality_score,
                     "quality_rating": report.estimated_quality_rating,
                     "ready_for_generation": report.ready_for_generation,
-
-                    # Detailed scores
                     "scores": {
                         "structural": report.validation_scores.structural,
-                        "genre_compliance": report.validation_scores.genre_compliance,
-                        "artifact_risk": report.validation_scores.artifact_risk,
+                        "genre": report.validation_scores.genre_compliance,
+                        "artifacts": report.validation_scores.artifact_risk,
                         "consistency": report.validation_scores.consistency,
                         "performance": report.validation_scores.performance_optimization
                     },
-
-                    # Issues and recommendations
-                    "issues": [
-                        {
-                            "severity": i.severity,
-                            "message": i.message,
-                            "suggestion": i.suggestion
-                        }
-                        for i in report.issues_found
-                    ],
+                    "issues": [{"severity": i.severity, "message": i.message} for i in report.issues_found],
                     "recommendations": report.recommendations
                 },
-
-                # Refined prompt
                 "refined_prompt": report.refined_prompt,
                 "original_prompt": report.original_prompt,
-
-                # Auto-fixes applied
-                "auto_fixes": [
-                    {
-                        "type": f.fix_type,
-                        "reason": f.reason,
-                        "confidence": f.confidence
-                    }
-                    for f in report.auto_fixes_applied
-                ],
-
-                # Generation settings
+                "auto_fixes": [f.fix_type for f in report.auto_fixes_applied],
                 "generation_mode": report.generation_mode_recommendation,
                 "genre_detected": report.genre_detected,
-
-                # Current metrics summary
-                "metrics": self.metrics.get_metrics_summary(),
-
+                "metrics": self.metrics.get_summary(),
                 "timestamp": datetime.now().isoformat()
             }
-
-            logger.info(
-                f"✅ Validation complete: Score={report.validation_scores.overall_quality_score:.2f}, "
-                f"Ready={report.ready_for_generation}"
-            )
-
-            return response
 
         except Exception as e:
             logger.error(f"❌ Validation failed: {e}")
@@ -175,201 +103,122 @@ class Agent8StoryboardBridge:
                 "timestamp": datetime.now().isoformat()
             }
 
-    # ============================================
-    # API 2: AGENT 5c/5d → AGENT 8 (Feedback)
-    # ============================================
+    # ═══════════════════════════════════════════════════════════════════════
+    # API 2: GENERATION FEEDBACK
+    # ═══════════════════════════════════════════════════════════════════════
 
     def send_generation_feedback(
         self,
         validation_id: str,
         generation_success: bool,
         generation_quality_score: float,
-        error_message: Optional[str] = None,
-        generation_metadata: Optional[Dict] = None
+        error_message: Optional[str] = None
     ) -> Dict:
         """
-        Send generation feedback from Agent 5c/5d to Agent 8
+        Send generation feedback from Agent 5c/5d
 
-        Called by Agent 5c/5d AFTER video generation
-
-        Flow:
-        1. Agent 5c/5d generates video based on validated prompt
-        2. Video generation succeeds or fails
-        3. This function is called with results
-        4. Agent 8 metrics are updated
-        5. Recommendations are recalculated
-
-        Args:
-            validation_id: ID of original validation record
-            generation_success: Whether generation succeeded
-            generation_quality_score: Quality score from generation (0.0-1.0)
-            error_message: Error message if generation failed (optional)
-            generation_metadata: Additional metadata from generation (optional)
+        Called after video generation completes
 
         Returns:
-            Dict containing updated metrics and recommendations
+            Dict with updated metrics and recommendations
         """
         try:
-            logger.info(
-                f"📊 Receiving generation feedback for {validation_id}: "
-                f"Success={generation_success}, Quality={generation_quality_score:.2f}"
-            )
+            logger.info(f"📊 Feedback for {validation_id}: {generation_success}")
 
-            # Update metrics with real feedback
             success = self.metrics.add_generation_feedback(
-                validation_id=validation_id,
-                generation_success=generation_success,
-                generation_quality=generation_quality_score,
-                error_message=error_message
+                validation_id,
+                generation_success,
+                generation_quality_score
             )
 
             if not success:
                 return {
                     "status": "error",
-                    "error": f"Validation record {validation_id} not found",
+                    "error": f"Validation {validation_id} not found",
                     "timestamp": datetime.now().isoformat()
                 }
 
-            # Get updated metrics and recommendations
-            updated_metrics = self.metrics.get_metrics_summary()
-            recommendations = self.metrics.get_genre_recommendations()
-
-            response = {
+            return {
                 "status": "success",
-                "message": f"Feedback recorded for validation {validation_id}",
-
-                # Updated metrics
-                "updated_metrics": updated_metrics,
-
-                # Genre-specific recommendations
-                "recommendations": recommendations,
-
-                # Feedback summary
-                "feedback": {
-                    "validation_id": validation_id,
-                    "generation_success": generation_success,
-                    "generation_quality": generation_quality_score,
-                    "recorded_at": datetime.now().isoformat()
-                },
-
+                "message": f"Feedback recorded for {validation_id}",
+                "updated_metrics": self.metrics.get_summary(),
+                "recommendations": self.metrics.get_recommendations(),
                 "timestamp": datetime.now().isoformat()
             }
-
-            logger.info(f"✅ Feedback recorded successfully for {validation_id}")
-
-            return response
 
         except Exception as e:
-            logger.error(f"❌ Failed to send generation feedback: {e}")
-            return {
-                "status": "error",
-                "error": str(e),
-                "timestamp": datetime.now().isoformat()
-            }
+            logger.error(f"❌ Feedback failed: {e}")
+            return {"status": "error", "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    # ============================================
-    # API 3: STORYBOARD UI → AGENT 8 (Dashboard)
-    # ============================================
+    # ═══════════════════════════════════════════════════════════════════════
+    # API 3: GET DASHBOARD DATA
+    # ═══════════════════════════════════════════════════════════════════════
 
     def get_dashboard_data(self) -> Dict:
         """
-        Get dashboard data for Storyboard App
-
-        Called by Storyboard App to display training dashboard
-
-        Shows:
-        - Overall performance metrics
-        - Per-genre statistics
-        - Per-prompt-type statistics
-        - Recommendations
-        - Recent validations
+        Get dashboard data for Storyboard UI
 
         Returns:
-            Dict containing complete dashboard data
+            Dict with overview, per-genre stats, recommendations
         """
         try:
-            logger.info("📈 Fetching dashboard data...")
+            logger.info("📈 Fetching dashboard data")
 
-            # Get summary metrics
-            summary = self.metrics.get_metrics_summary()
+            summary = self.metrics.get_summary()
+            recs = self.metrics.get_recommendations()
+            recent = self.metrics.get_recent(10)
 
-            # Get recommendations
-            recommendations = self.metrics.get_genre_recommendations()
-
-            # Get recent records
-            recent_records = self.metrics.get_recent_records(limit=10)
-
-            # Determine overall system status
-            avg_quality = summary["summary"]["avg_quality_score"]
-            if avg_quality > 0.85:
-                system_status = "excellent"
-                status_message = "🟢 System performing excellently"
-            elif avg_quality > 0.75:
-                system_status = "good"
-                status_message = "🟢 System performing well"
-            elif avg_quality > 0.65:
-                system_status = "fair"
-                status_message = "🟡 System needs monitoring"
+            # Determine system status
+            avg_q = summary["summary"]["avg_quality"]
+            if avg_q > 0.85:
+                status = "excellent"
+                msg = "🟢 Excellent performance"
+            elif avg_q > 0.75:
+                status = "good"
+                msg = "🟢 Good performance"
+            elif avg_q > 0.65:
+                status = "fair"
+                msg = "🟡 Fair - needs monitoring"
             else:
-                system_status = "poor"
-                status_message = "🔴 System needs immediate attention"
+                status = "poor"
+                msg = "🔴 Needs attention"
 
-            dashboard = {
+            return {
                 "status": "success",
-
-                # System overview
                 "overview": {
-                    "total_validations": summary["summary"]["total_validations"],
-                    "avg_quality_score": summary["summary"]["avg_quality_score"],
-                    "success_count": summary["summary"]["success_count"],
+                    "total_validations": summary["summary"]["total"],
+                    "avg_quality_score": summary["summary"]["avg_quality"],
                     "success_rate": summary["summary"].get("success_rate", 0.0),
-                    "system_status": system_status,
-                    "status_message": status_message,
+                    "system_status": status,
+                    "status_message": msg,
                     "last_updated": summary["timestamp"]
                 },
-
-                # Genre statistics
                 "by_genre": summary["by_genre"],
-
-                # Prompt type statistics
-                "by_prompt_type": summary["by_prompt_type"],
-
-                # Recommendations
-                "recommendations": recommendations,
-
-                # Recent validations
+                "by_prompt_type": summary["by_type"],
+                "recommendations": recs,
                 "recent_validations": [
                     {
                         "id": r["id"],
                         "timestamp": r["timestamp"],
-                        "genre": r["input"]["genre"],
-                        "prompt_type": r["input"]["prompt_type"],
-                        "quality_score": r["validation"]["quality_score"],
-                        "ready": r["validation"]["ready_for_generation"],
-                        "generation_success": r["generation_feedback"].get("success"),
+                        "genre": r.get("genre", r.get("input", {}).get("genre", "unknown")),
+                        "prompt_type": r.get("prompt_type", r.get("input", {}).get("prompt_type", "unknown")),
+                        "quality_score": r.get("quality_score", r.get("validation", {}).get("quality_score", 0.0)),
+                        "ready": r.get("ready", r.get("validation", {}).get("ready_for_generation", False)),
+                        "generation_success": r.get("generation_success", r.get("generation_feedback", {}).get("success")),
                         "storyboard_id": r.get("storyboard_id")
                     }
-                    for r in recent_records
+                    for r in recent
                 ],
-
                 "timestamp": datetime.now().isoformat()
             }
-
-            logger.info("✅ Dashboard data retrieved successfully")
-
-            return dashboard
 
         except Exception as e:
-            logger.error(f"❌ Failed to get dashboard data: {e}")
-            return {
-                "status": "error",
-                "error": str(e),
-                "timestamp": datetime.now().isoformat()
-            }
+            logger.error(f"❌ Dashboard failed: {e}")
+            return {"status": "error", "error": str(e), "timestamp": datetime.now().isoformat()}
 
-    # ============================================
-    # API 4: STORYBOARD → AGENT 8 (Manual Feedback)
-    # ============================================
+    # ═══════════════════════════════════════════════════════════════════════
+    # API 4: MANUAL USER FEEDBACK
+    # ═══════════════════════════════════════════════════════════════════════
 
     def send_manual_feedback(
         self,
@@ -380,195 +229,88 @@ class Agent8StoryboardBridge:
         """
         Send manual user feedback from Storyboard UI
 
-        Called when user provides manual feedback on a validation
-
         Args:
-            validation_id: ID of validation record
-            user_satisfaction: User rating (1-5 stars)
-            notes: User's comments/notes
+            validation_id: ID from validation
+            user_satisfaction: 1-5 stars
+            notes: User comments
 
         Returns:
-            Dict containing confirmation and updated metrics
+            Dict with confirmation
         """
         try:
-            logger.info(
-                f"💬 Receiving manual feedback for {validation_id}: "
-                f"{user_satisfaction} stars"
-            )
+            logger.info(f"💬 Manual feedback: {user_satisfaction} stars")
 
-            # Validate satisfaction range
             if not 1 <= user_satisfaction <= 5:
                 return {
                     "status": "error",
-                    "error": "User satisfaction must be between 1 and 5",
+                    "error": "Satisfaction must be 1-5",
                     "timestamp": datetime.now().isoformat()
                 }
 
-            # Add user feedback to metrics
             success = self.metrics.add_user_feedback(
-                validation_id=validation_id,
-                satisfaction=user_satisfaction,
-                notes=notes
+                validation_id,
+                user_satisfaction,
+                notes
             )
 
             if not success:
                 return {
                     "status": "error",
-                    "error": f"Validation record {validation_id} not found",
+                    "error": f"Validation {validation_id} not found",
                     "timestamp": datetime.now().isoformat()
                 }
 
-            response = {
-                "status": "success",
-                "message": "User feedback recorded successfully",
-
-                "feedback": {
-                    "validation_id": validation_id,
-                    "satisfaction": user_satisfaction,
-                    "notes": notes,
-                    "recorded_at": datetime.now().isoformat()
-                },
-
-                "timestamp": datetime.now().isoformat()
-            }
-
-            logger.info(f"✅ Manual feedback recorded for {validation_id}")
-
-            return response
-
-        except Exception as e:
-            logger.error(f"❌ Failed to send manual feedback: {e}")
-            return {
-                "status": "error",
-                "error": str(e),
-                "timestamp": datetime.now().isoformat()
-            }
-
-    # ============================================
-    # UTILITY METHODS
-    # ============================================
-
-    def get_validation_history(
-        self,
-        storyboard_scene_id: Optional[str] = None,
-        genre: Optional[str] = None,
-        limit: int = 50
-    ) -> Dict:
-        """
-        Get validation history with optional filtering
-
-        Args:
-            storyboard_scene_id: Filter by storyboard scene (optional)
-            genre: Filter by genre (optional)
-            limit: Maximum number of records to return
-
-        Returns:
-            Dict containing filtered validation history
-        """
-        try:
-            records = self.metrics.metrics["records"]
-
-            # Apply filters
-            if storyboard_scene_id:
-                records = [
-                    r for r in records
-                    if r.get("storyboard_id") == storyboard_scene_id
-                ]
-
-            if genre:
-                records = [
-                    r for r in records
-                    if r["input"]["genre"] == genre
-                ]
-
-            # Limit results
-            records = list(reversed(records[-limit:]))
-
             return {
                 "status": "success",
-                "count": len(records),
-                "records": records,
-                "filters": {
-                    "storyboard_scene_id": storyboard_scene_id,
-                    "genre": genre,
-                    "limit": limit
-                },
+                "message": "User feedback recorded",
                 "timestamp": datetime.now().isoformat()
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to get validation history: {e}")
-            return {
-                "status": "error",
-                "error": str(e),
-                "timestamp": datetime.now().isoformat()
-            }
+            logger.error(f"❌ Manual feedback failed: {e}")
+            return {"status": "error", "error": str(e), "timestamp": datetime.now().isoformat()}
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# USAGE EXAMPLE
-# ─────────────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     print("=" * 80)
     print("AGENT 8 STORYBOARD BRIDGE - TEST")
     print("=" * 80)
 
-    # Initialize bridge
     bridge = Agent8StoryboardBridge()
 
-    # Test 1: Validate prompt from storyboard
-    print("\n1. Testing validation from storyboard...")
-    validation_result = bridge.validate_prompt_from_storyboard(
-        prompt="""
-        [IDENTITY] Woman, 30s, dark hair, warm expression
-        [CINEMATOGRAPHY] Dolly-in over 6 seconds, eye-level camera
-        [ENVIRONMENT] Modern apartment, golden hour, warm amber palette
-        [PERFORMANCE] Woman walks to window, pauses, smiles
-        [AUDIO] Dialogue: "I've been thinking"
-        [NEGATIVES] No watermark, no floating limbs
-        """,
+    # Test API 1: Validation
+    print("\n1. Testing validation...")
+    result = bridge.validate_prompt_from_storyboard(
+        prompt="""[IDENTITY] Woman, 30s
+        [CINEMATOGRAPHY] Dolly-in
+        [ENVIRONMENT] Modern apartment
+        [PERFORMANCE] Walks to window
+        [AUDIO] Dialogue: "Thinking"
+        [NEGATIVES] No watermark""",
         prompt_type="veo_3.1",
         genre="reggaeton",
         storyboard_scene_id="scene_001"
     )
+    print(f"Status: {result['status']}")
+    print(f"Quality: {result['validation']['quality_score']:.2f}")
+    val_id = result.get('validation_id')
 
-    print(f"Status: {validation_result['status']}")
-    print(f"Validation ID: {validation_result.get('validation_id')}")
-    print(f"Quality Score: {validation_result['validation']['quality_score']:.2f}")
-    print(f"Ready: {validation_result['validation']['ready_for_generation']}")
-
-    # Test 2: Send generation feedback
+    # Test API 2: Generation feedback
     print("\n2. Testing generation feedback...")
-    feedback_result = bridge.send_generation_feedback(
-        validation_id=validation_result['validation_id'],
-        generation_success=True,
-        generation_quality_score=0.88
-    )
+    fb_result = bridge.send_generation_feedback(val_id, True, 0.88)
+    print(f"Status: {fb_result['status']}")
 
-    print(f"Status: {feedback_result['status']}")
-    print(f"Message: {feedback_result.get('message')}")
+    # Test API 3: Dashboard
+    print("\n3. Testing dashboard...")
+    dash = bridge.get_dashboard_data()
+    print(f"Status: {dash['status']}")
+    print(f"Total: {dash['overview']['total_validations']}")
 
-    # Test 3: Get dashboard data
-    print("\n3. Testing dashboard data...")
-    dashboard = bridge.get_dashboard_data()
-
-    print(f"Status: {dashboard['status']}")
-    print(f"System Status: {dashboard['overview']['status_message']}")
-    print(f"Total Validations: {dashboard['overview']['total_validations']}")
-    print(f"Avg Quality: {dashboard['overview']['avg_quality_score']:.2f}")
-
-    # Test 4: Send manual feedback
+    # Test API 4: Manual feedback
     print("\n4. Testing manual feedback...")
-    manual_result = bridge.send_manual_feedback(
-        validation_id=validation_result['validation_id'],
-        user_satisfaction=5,
-        notes="Perfect validation! Very helpful recommendations."
-    )
-
-    print(f"Status: {manual_result['status']}")
-    print(f"Message: {manual_result.get('message')}")
+    manual = bridge.send_manual_feedback(val_id, 5, "Perfect!")
+    print(f"Status: {manual['status']}")
 
     print("\n" + "=" * 80)
-    print("✅ All API tests completed successfully!")
+    print("✅ All APIs tested!")
     print("=" * 80)

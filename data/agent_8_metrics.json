@@ -1,91 +1,67 @@
 {
   "metadata": {
     "version": "1.0",
-    "created": "2025-11-12T22:12:39.900653",
-    "last_updated": "2025-11-12T22:12:48.445881"
+    "created": "2025-11-12T22:27:42.261216"
   },
   "summary": {
-    "total_validations": 2,
-    "success_count": 2,
-    "avg_quality_score": 0.84125,
+    "total": 2,
+    "avg_quality": 0.815,
     "success_rate": 1.0
   },
   "records": [
     {
-      "id": "val_1762985559901",
-      "timestamp": "2025-11-12T22:12:39.901967",
+      "id": "val_1762986470893",
+      "timestamp": "2025-11-12T22:27:50.893315",
       "storyboard_id": "scene_001",
-      "input": {
-        "prompt": "Woman, 30s, walks to window in modern apartment, warm lighting...",
-        "prompt_type": "veo_3.1",
-        "genre": "reggaeton"
-      },
-      "validation": {
-        "quality_score": 0.85,
-        "ready_for_generation": true,
-        "issues_count": 1,
-        "issues": [
-          "Dialog exceeds 7 words"
-        ],
-        "fixes_count": 1,
-        "fixes": [
-          "too_long_dialog"
-        ]
-      },
-      "generation_feedback": {
-        "success": true,
-        "quality_score": 0.88,
-        "feedback_timestamp": "2025-11-12T22:12:39.902563"
-      },
-      "user_feedback": {
-        "satisfaction": null,
-        "notes": null,
-        "timestamp": null
-      }
+      "prompt_snippet": "Woman walks to window in modern apartment...",
+      "prompt_type": "veo_3.1",
+      "genre": "reggaeton",
+      "quality_score": 0.85,
+      "ready": true,
+      "issues": [
+        "Dialog too long"
+      ],
+      "fixes": [
+        "Trimmed dialog"
+      ],
+      "generation_success": true,
+      "generation_quality": 0.88,
+      "user_rating": null,
+      "user_notes": null,
+      "feedback_timestamp": "2025-11-12T22:27:50.893984"
     },
     {
-      "id": "val_1762985568444",
-      "timestamp": "2025-11-12T22:12:48.444395",
+      "id": "val_1762986478637",
+      "timestamp": "2025-11-12T22:27:58.637330",
       "storyboard_id": "scene_001",
-      "input": {
-        "prompt": "\n        [IDENTITY] Woman, 30s, dark hair, warm expression\n        [CINEMATOGRAPHY] Dolly-in over 6 seconds, eye-level camera\n        [ENVIRONMENT] Modern apartment, golden hour, warm amber palette\n  ...",
-        "prompt_type": "veo_3.1",
-        "genre": "reggaeton"
-      },
-      "validation": {
-        "quality_score": 0.8325000000000001,
-        "ready_for_generation": true,
-        "issues_count": 1,
-        "issues": [
-          "Missing or insufficient negative prompts"
-        ],
-        "fixes_count": 0,
-        "fixes": []
-      },
-      "generation_feedback": {
-        "success": true,
-        "quality_score": 0.88,
-        "feedback_timestamp": "2025-11-12T22:12:48.445146"
-      },
-      "user_feedback": {
-        "satisfaction": 5,
-        "notes": "Perfect validation! Very helpful recommendations.",
-        "timestamp": "2025-11-12T22:12:48.446026"
-      }
+      "prompt_snippet": "[IDENTITY] Woman, 30s\n        [CINEMATOGRAPHY] Dolly-in\n        [ENVIRONMENT] Modern apartment\n        [PERFORMANCE] Walks to window\n        [AUDIO] D...",
+      "prompt_type": "veo_3.1",
+      "genre": "reggaeton",
+      "quality_score": 0.78,
+      "ready": true,
+      "issues": [
+        "Missing or insufficient negative prompts"
+      ],
+      "fixes": [],
+      "generation_success": true,
+      "generation_quality": 0.88,
+      "user_rating": 5,
+      "user_notes": "Perfect!",
+      "feedback_timestamp": "2025-11-12T22:27:58.638025"
     }
   ],
   "by_genre": {
     "reggaeton": {
       "count": 2,
-      "avg_score": 0.84125,
+      "avg_score": 0.815,
       "ready_rate": 1.0,
       "success_rate": 1.0
     }
   },
-  "by_prompt_type": {
+  "by_type": {
     "veo_3.1": {
       "count": 2,
-      "avg_score": 0.84125,
+      "avg_score": 0.815,
       "success_rate": 1.0
     }
   }
