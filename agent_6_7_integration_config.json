@@ -1,0 +1,75 @@
+{
+  "integration": {
+    "agent_6_to_agent_8": {
+      "enabled": true,
+      "agent8_endpoint": "http://localhost:5000/validate",
+      "timeout": 30,
+      "fallback_on_error": true,
+      "retry_attempts": 3,
+      "retry_delay": 2
+    },
+    "agent_7_to_agent_8": {
+      "enabled": true,
+      "agent8_endpoint": "http://localhost:5000/validate",
+      "timeout": 30,
+      "fallback_on_error": true,
+      "retry_attempts": 3,
+      "retry_delay": 2
+    }
+  },
+  "quality_gates": {
+    "min_quality_score": 0.75,
+    "require_agent8_validation": true,
+    "auto_fix_enabled": true,
+    "reject_below_threshold": false
+  },
+  "prompt_types": {
+    "veo_3.1": {
+      "max_length": 500,
+      "required_elements": [
+        "scene_description",
+        "camera_movement",
+        "lighting_style"
+      ],
+      "genre_specific": true
+    },
+    "runway_gen4": {
+      "max_length": 400,
+      "required_elements": [
+        "scene_description",
+        "motion_intensity",
+        "shot_type"
+      ],
+      "genre_specific": true
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "log_file": "agent_6_7_integration.log",
+    "log_rotation": "daily",
+    "max_log_size_mb": 100,
+    "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics_endpoint": "http://localhost:5001/metrics",
+    "track_approval_rate": true,
+    "track_quality_scores": true,
+    "alert_on_low_quality": true,
+    "alert_threshold": 0.6
+  },
+  "cache": {
+    "enabled": true,
+    "ttl_seconds": 3600,
+    "max_cache_size": 1000,
+    "cache_validated_prompts": true
+  },
+  "performance": {
+    "parallel_validation": false,
+    "batch_validation_size": 10,
+    "validation_queue_size": 100
+  },
+  "version": "1.0.0",
+  "last_updated": "2025-11-12",
+  "description": "Agent 6/7 Integration with Agent 8 - VEO & Runway Prompt Validation Pipeline"
+}
