@@ -1,0 +1,51 @@
+{
+  "system": {
+    "version": "1.0",
+    "agent_name": "Agent 9 - Quality Control"
+  },
+  "quality_thresholds": {
+    "video_quality_min": 0.75,
+    "audio_quality_min": 0.80,
+    "sync_min": 0.85,
+    "genre_compliance_min": 0.80,
+    "overall_pass_threshold": 0.80
+  },
+  "video_specs": {
+    "resolution": "1920x1080",
+    "fps": [24, 30],
+    "bitrate_range": [5000, 15000],
+    "color_depth": "24-bit"
+  },
+  "genres": {
+    "reggaeton": {
+      "motion_intensity": 0.7,
+      "sync_tolerance": 0.1,
+      "color_profile": "warm",
+      "expected_fps": 30
+    },
+    "edm": {
+      "motion_intensity": 0.9,
+      "sync_tolerance": 0.05,
+      "color_profile": "neon",
+      "expected_fps": 30
+    },
+    "hiphop": {
+      "motion_intensity": 0.6,
+      "sync_tolerance": 0.08,
+      "color_profile": "noir",
+      "expected_fps": 24
+    },
+    "pop": {
+      "motion_intensity": 0.5,
+      "sync_tolerance": 0.12,
+      "color_profile": "bright",
+      "expected_fps": 30
+    },
+    "rb_soul": {
+      "motion_intensity": 0.4,
+      "sync_tolerance": 0.15,
+      "color_profile": "warm",
+      "expected_fps": 24
+    }
+  }
+}
