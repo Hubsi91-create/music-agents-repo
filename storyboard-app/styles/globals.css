@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Galaxy/Universe Neon Theme */
+:root {
+  --space-dark: #0a0e27;
+  --surface-dark: #1a1f3a;
+  --surface-light: #252d4a;
+  --neon-cyan: #00f0ff;
+  --energy-red: #ff1744;
+  --nebula-purple: #b24bff;
+  --success-green: #00e676;
+  --plasma-yellow: #ffeb3b;
+  --text-primary: #e0e8ff;
+  --text-secondary: #a0aff0;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--space-dark);
+  color: var(--text-primary);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--space-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nebula-purple);
+  box-shadow: 0 0 8px rgba(178, 75, 255, 0.7);
+}
+
+/* Neon Button Base */
+@layer components {
+  .btn-neon {
+    @apply px-8 py-3 rounded-full font-semibold uppercase tracking-wider
+           transition-all duration-300 border-2 cursor-pointer
+           hover:scale-105 active:scale-98 disabled:opacity-50
+           disabled:cursor-not-allowed disabled:shadow-none;
+  }
+
+  .btn-neon-cyan {
+    @apply btn-neon border-neon-cyan text-neon-cyan
+           shadow-neon-cyan hover:shadow-neon-cyan-lg;
+  }
+
+  .btn-neon-red {
+    @apply btn-neon border-energy-red text-energy-red
+           shadow-neon-red hover:brightness-110;
+  }
+
+  .btn-neon-purple {
+    @apply btn-neon border-nebula-purple text-nebula-purple
+           shadow-neon-purple hover:brightness-110;
+  }
+
+  /* Card Styles */
+  .card-neon {
+    @apply bg-surface-dark rounded-xl p-6 border border-neon-cyan/20
+           shadow-lg transition-all duration-300
+           hover:border-neon-cyan/40 hover:shadow-neon-cyan;
+  }
+
+  /* Input Styles */
+  .input-neon {
+    @apply bg-surface-light border-2 border-neon-cyan/30 rounded-lg
+           px-4 py-2 text-text-primary placeholder-text-secondary
+           focus:border-neon-cyan focus:outline-none focus:shadow-neon-cyan
+           transition-all duration-300;
+  }
+
+  .textarea-neon {
+    @apply input-neon resize-none;
+  }
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Neon Text Glow */
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.8),
+               0 0 20px rgba(0, 240, 255, 0.5),
+               0 0 30px rgba(0, 240, 255, 0.3);
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 10px rgba(178, 75, 255, 0.8),
+               0 0 20px rgba(178, 75, 255, 0.5),
+               0 0 30px rgba(178, 75, 255, 0.3);
+}
+
+/* Loading Spinner */
+@keyframes spin-glow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-neon {
+  border: 3px solid rgba(0, 240, 255, 0.2);
+  border-top-color: var(--neon-cyan);
+  border-radius: 50%;
+  animation: spin-glow 1s linear infinite;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+/* Video Player Overlay */
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-container:hover .video-overlay {
+  opacity: 1;
+}
+
+/* Backdrop Blur Effect */
+.backdrop-neon {
+  backdrop-filter: blur(10px);
+  background: rgba(26, 31, 58, 0.8);
+}
+
+/* Divider */
+.divider-neon {
+  border-color: rgba(0, 240, 255, 0.1);
+}
