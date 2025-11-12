@@ -1,4 +1,4 @@
-﻿"""
+"""
 Agent 9: Influencer Collaboration Matcher
 Purpose: Identify suitable influencers for music collaborations
 Output: JSON with ranked influencer matches
@@ -175,7 +175,6 @@ success_tool = Tool(
     }
 )
 
-
 # Create the ADK Agent
 agent_9 = Agent(
     name="influencer_collaboration_matcher",
@@ -229,4 +228,3 @@ Always output results as valid JSON with these fields:
 from vertexai.agent_engines import AdkApp
 
 app = AdkApp(agent=agent_9)
-``
