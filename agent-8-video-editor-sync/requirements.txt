@@ -1,8 +1,0 @@
-﻿librosa
-numpy
-pydub
-av
-opencv-python
-scipy
-soundfile
-pyyaml
