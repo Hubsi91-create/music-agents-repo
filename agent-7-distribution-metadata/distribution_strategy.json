@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-11-11T03:19:51.333736",
+  "total_influencers": 1,
+  "top_5_recommendations": [
+    {
+      "rank": 1,
+      "channel_name": "NUVEYLIVE -Digital Marketing, Music Business, Film",
+      "channel_id": "UCbl2qWH0xBmor3lacnHSy7A",
+      "subscribers": "463",
+      "views": "36977",
+      "collaboration_score": 40.0,
+      "estimated_reach": "46-139",
+      "engagement_probability": "8.0%",
+      "best_post_time": "14:00-16:00 UTC (Peak Hours)",
+      "priority": "MEDIUM",
+      "email_template": "Collaboration: Your Channel in New Electronic Music Video",
+      "url": "https://www.youtube.com/channel/UCbl2qWH0xBmor3lacnHSy7A"
+    }
+  ],
+  "all_recommendations": [
+    {
+      "rank": 1,
+      "channel_name": "NUVEYLIVE -Digital Marketing, Music Business, Film",
+      "channel_id": "UCbl2qWH0xBmor3lacnHSy7A",
+      "subscribers": "463",
+      "views": "36977",
+      "collaboration_score": 40.0,
+      "estimated_reach": "46-139",
+      "engagement_probability": "8.0%",
+      "best_post_time": "14:00-16:00 UTC (Peak Hours)",
+      "priority": "MEDIUM",
+      "email_template": "Collaboration: Your Channel in New Electronic Music Video",
+      "url": "https://www.youtube.com/channel/UCbl2qWH0xBmor3lacnHSy7A"
+    }
+  ],
+  "distribution_strategy": {
+    "phase_1": "Contact Top 5 (Week 1)",
+    "phase_2": "Secondary Outreach (Week 2)",
+    "phase_3": "Community Posts (Week 3)",
+    "expected_total_reach": "93+"
+  }
+}

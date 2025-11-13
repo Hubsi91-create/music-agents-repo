@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-11-11T03:05:15.584295",
+  "music_genre": "Electronic",
+  "mood": "cinematic, professional",
+  "total_found": 1,
+  "recommendation_type": "Premium YouTube Influencers",
+  "authentication": "OAuth 2.0",
+  "influencers": [
+    {
+      "channel_name": "NUVEYLIVE -Digital Marketing, Music Business, Film",
+      "channel_id": "UCbl2qWH0xBmor3lacnHSy7A",
+      "subscribers": "463",
+      "views": "36977",
+      "video_count": "112",
+      "description": "NuveyLive is a product of NUVEYLIVE MEDIA\n\nNUVEYLIVE MEDIA  is a digital marketing agency that loves",
+      "url": "https://www.youtube.com/channel/UCbl2qWH0xBmor3lacnHSy7A",
+      "thumbnail": "https://yt3.ggpht.com/n9_13py9E1Ov5lABBIg1ImfRmZDAeC5B6f6tI2vz21GSPQnZVMfLJn9tYqWftiUPKTMFa0sA=s88-c-k-c0x00ffffff-no-rj",
+      "rank": 1,
+      "recommendation_score": 90,
+      "mood_match": "cinematic, professional",
+      "genre_match": "Electronic",
+      "platform": "YouTube"
+    }
+  ]
+}

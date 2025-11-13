@@ -1,0 +1,39 @@
+﻿[2025-11-12 00:59:56] [INFO] AGENT 9 - SOUND DESIGNER and AUDIO MIXER
+[2025-11-12 00:59:56] [INFO] PowerShell Version: 2025.4.0
+[2025-11-12 00:59:56] [INFO] Action: install
+[2025-11-12 00:59:56] [INFO] Mode: INSTALLATION
+[2025-11-12 00:59:56] [INFO] AGENT 9 INSTALLATION STARTED
+[2025-11-12 00:59:56] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\core
+[2025-11-12 00:59:56] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\analysis
+[2025-11-12 00:59:56] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\mastering
+[2025-11-12 00:59:56] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\qc
+[2025-11-12 00:59:56] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\output\youtube
+[2025-11-12 00:59:56] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\output\spotify
+[2025-11-12 00:59:56] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\output\apple
+[2025-11-12 00:59:56] [SUCCESS] Created: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\output\netflix
+[2025-11-12 00:59:56] [INFO] Already exists: C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\output\logs
+[2025-11-12 00:59:56] [SUCCESS] Created requirements.txt
+[2025-11-12 00:59:56] [INFO] Installing Python audio packages...
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: librosa in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\requirements.txt (line 1)) (0.11.0)
+Requirement already satisfied: numpy in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\requirements.txt (line 2)) (2.2.6)
+Requirement already satisfied: pydub in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\requirements.txt (line 3)) (0.25.1)
+Requirement already satisfied: scipy in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\requirements.txt (line 5)) (1.16.3)
+Requirement already satisfied: soundfile in c:\users\hubsi\appdata\local\packages\pythonsoftwarefoundation.python.3.13_qbz5n2kfra8p0\localcache\local-packages\python313\site-packages (from -r C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\requirements.txt (line 6)) (0.13.1)
+pip : ERROR: Could not find a version that satisfies the requirement loudness-meter (from versions: none)
+In C:\Users\Hubsi\Music\music-agents-repo\agent-9-sound-designer-mixer\deploy.ps1:18 Zeichen:1
++ pip install -r $reqFile 2>&1 | Out-File -FilePath $logFile -Append -E ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR: Could no...versions: none):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[notice] A new release of pip is available: 25.2 -> 25.3
+[notice] To update, run: 
+C:\Users\Hubsi\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe -m pip install 
+--upgrade pip
+ERROR: No matching distribution found for loudness-meter
+[2025-11-12 00:59:58] [SUCCESS] Python dependencies installed
+[2025-11-12 00:59:58] [SUCCESS] INSTALLATION COMPLETE
+[2025-11-12 00:59:58] [SUCCESS] Agent 9 is ready to use!
+[2025-11-12 00:59:58] [SUCCESS] Script completed

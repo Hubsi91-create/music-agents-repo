@@ -1,0 +1,7 @@
+﻿ffmpeg-python
+Pillow
+pymediainfo
+requests
+pyYAML
+colorama
+mutagen
