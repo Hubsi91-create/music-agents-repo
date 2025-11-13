@@ -159,17 +159,54 @@ def test_validation():
         }
     }
 
-    test_type = request.json.get("test_type", "veo_simple")
+    if not agent8:
+        return jsonify({"error": "Agent 8 not initialized"}), 500
 
-    if test_type not in test_prompts:
-        return jsonify({"error": f"Unknown test type: {test_type}"}), 400
+    try:
+        # Get test type from request
+        data = request.get_json() or {}
+        test_type = data.get("test_type", "veo_simple")
 
-    # Use test prompt
-    test_data = test_prompts[test_type]
-    request.json = test_data
+        if test_type not in test_prompts:
+            return jsonify({"error": f"Unknown test type: {test_type}"}), 400
 
-    # Call validate
-    return validate()
+        # Get test prompt data
+        test_data = test_prompts[test_type]
+        prompt = test_data["prompt"]
+        prompt_type = test_data["prompt_type"]
+        genre = test_data["genre"]
+
+        logger.info(f"🧪 Test validation request: {test_type}")
+
+        # Run Agent 8 validation
+        report = agent8.validate_and_refine(prompt, prompt_type, genre)
+
+        # Format response
+        response = {
+            "status": "success",
+            "test_type": test_type,
+            "timestamp": datetime.now().isoformat(),
+            "validation": {
+                "quality_score": round(report.validation_scores.overall_quality_score, 2),
+                "ready_for_generation": report.ready_for_generation,
+                "issues_count": len(report.issues_found),
+                "issues": [issue.message for issue in report.issues_found[:5]],
+                "recommendations": report.recommendations[:3]
+            },
+            "refined_prompt": report.refined_prompt,
+            "generation_mode": report.generation_mode_recommendation
+        }
+
+        logger.info(f"✅ Test validation complete: Score={response['validation']['quality_score']}")
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        logger.error(f"❌ Test validation error: {e}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
 
 
 if __name__ == "__main__":
