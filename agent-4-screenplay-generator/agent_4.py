@@ -86,7 +86,7 @@ def extract_mood(description, quality_score):
 def main():
     if len(sys.argv) < 4:
         print("[Agent 4] Screenplay Generator")
-        print("Usage: python agent_4.py <music_title> <duration> oncept_json_n_file> <quality_score>")
+        print("Usage: python agent_4.py <music_title> <duration> <concept_json_file> <quality_score>")
         sys.exit(1)
     
     try:

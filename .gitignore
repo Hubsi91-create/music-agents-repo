@@ -13,3 +13,4 @@ build/
 .env
 secrets/
 *.log
+test_data/
