@@ -1,0 +1,80 @@
+# AGENT 8 - Google Cloud Deployment Ignore List
+# Dateien die NICHT zu Google Cloud hochgeladen werden
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environments
+venv/
+env/
+.venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Testing
+test_*.py
+*_test.py
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation (nicht für Production)
+*.md
+!README.md
+
+# Development Tools
+.editorconfig
+.flake8
+mypy.ini
+setup.py
+setup.cfg
+
+# Agent Directories (nur Agent 8 deployen!)
+agent-1-*/
+agent-2-*/
+agent-3-*/
+agent-4-*/
+agent-5a-*/
+agent-5b-*/
+agent-6-*/
+agent-7-*/
+agent-9-*/
+agent-10-*/
+agent-11-*/
+orchestrator/
+dashboard/
+data/
+
+# Development Dependencies
+requirements-dev.txt
+requirements-test.txt
+
+# Local Files
+*.log
+*.tmp
+.cache/
+
+# Deployment Scripts (nicht hochladen)
+deploy_local.sh
