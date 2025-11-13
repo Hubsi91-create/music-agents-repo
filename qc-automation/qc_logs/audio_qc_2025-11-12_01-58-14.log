@@ -1,4 +1,0 @@
-﻿[2025-11-12 01:58:14] [INFO] AUDIO QC SCRIPT STARTED
-[2025-11-12 01:58:14] [INFO] Audio File: C:\path\to\audio.wav
-[2025-11-12 01:58:14] [INFO] Target Platform: youtube
-[2025-11-12 01:58:14] [ERROR] ERROR: Audio file not found: C:\path\to\audio.wav

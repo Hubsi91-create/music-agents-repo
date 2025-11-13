@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 8 Dashboard - Prompt Validator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #888;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff4444;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .status-dot.online {
+            background: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .status-details {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #aaa;
+        }
+
+        .status-details div {
+            margin: 5px 0;
+        }
+
+        .test-button {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 30px;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .test-button:active {
+            transform: translateY(0);
+        }
+
+        .test-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #00ff88;
+            transition: transform 0.2s;
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+        }
+
+        .result-item.error {
+            border-left-color: #ff4444;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-time {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .result-score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .result-score.low {
+            color: #ffaa00;
+        }
+
+        .result-score.very-low {
+            color: #ff4444;
+        }
+
+        .result-details {
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .badge-warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+        }
+
+        .badge-error {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #00d4ff;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 Agent 8 Dashboard</h1>
+            <p class="subtitle">Prompt Refiner & Validator - Live Monitor</p>
+        </header>
+
+        <!-- Status Card -->
+        <div class="status-card">
+            <div class="status-header">
+                <div class="status-dot" id="statusDot"></div>
+                <div class="status-text" id="statusText">Checking...</div>
+            </div>
+            <div class="status-details" id="statusDetails">
+                <div id="serverStatus">Verbindung wird hergestellt...</div>
+            </div>
+        </div>
+
+        <!-- Test Button -->
+        <button class="test-button" id="testButton" onclick="runTest()">
+            🧪 Test Agent 8 durchführen
+        </button>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <h2>📊 Letzte 5 Test-Ergebnisse</h2>
+            <div id="resultsContainer">
+                <div class="no-results">Noch keine Tests durchgeführt. Klicke auf "Test Agent 8 durchführen"!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const AGENT8_URL = 'http://localhost:5000';
+        const MAX_RESULTS = 5;
+
+        // Health Check beim Laden
+        window.addEventListener('load', () => {
+            checkHealth();
+            loadResults();
+            // Auto-refresh health every 5 seconds
+            setInterval(checkHealth, 5000);
+        });
+
+        async function checkHealth() {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const statusDetails = document.getElementById('statusDetails');
+
+            try {
+                const response = await fetch(`${AGENT8_URL}/health`);
+                const data = await response.json();
+
+                if (response.ok && data.status === 'operational') {
+                    statusDot.classList.add('online');
+                    statusText.textContent = 'Agent 8 Online ✅';
+                    statusDetails.innerHTML = `
+                        <div><strong>Service:</strong> ${data.service}</div>
+                        <div><strong>Version:</strong> ${data.version}</div>
+                        <div><strong>Agent 8 Initialized:</strong> ${data.agent8_initialized ? 'Yes ✅' : 'No ❌'}</div>
+                        <div><strong>Endpoints:</strong> ${data.endpoints.length} verfügbar</div>
+                    `;
+                } else {
+                    throw new Error('Server nicht operational');
+                }
+            } catch (error) {
+                statusDot.classList.remove('online');
+                statusText.textContent = 'Agent 8 Offline ❌';
+                statusDetails.innerHTML = `
+                    <div style="color: #ff4444;">Fehler: ${error.message}</div>
+                    <div>Stelle sicher, dass der Server läuft: <code>python agent_8_server.py</code></div>
+                `;
+            }
+        }
+
+        async function runTest() {
+            const button = document.getElementById('testButton');
+            button.disabled = true;
+            button.textContent = '⏳ Test läuft...';
+
+            try {
+                const response = await fetch(`${AGENT8_URL}/test`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        test_type: 'veo_simple'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    saveResult(data);
+                    loadResults();
+                    button.textContent = '✅ Test erfolgreich!';
+                } else {
+                    throw new Error(data.error || 'Test fehlgeschlagen');
+                }
+            } catch (error) {
+                alert(`Fehler beim Test: ${error.message}`);
+                button.textContent = '❌ Test fehlgeschlagen';
+            } finally {
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.textContent = '🧪 Test Agent 8 durchführen';
+                }, 2000);
+            }
+        }
+
+        function saveResult(result) {
+            let results = JSON.parse(localStorage.getItem('agent8_results') || '[]');
+
+            // Add timestamp if not present
+            if (!result.timestamp) {
+                result.timestamp = new Date().toISOString();
+            }
+
+            results.unshift(result);
+
+            // Keep only last 5 results
+            results = results.slice(0, MAX_RESULTS);
+
+            localStorage.setItem('agent8_results', JSON.stringify(results));
+        }
+
+        function loadResults() {
+            const container = document.getElementById('resultsContainer');
+            const results = JSON.parse(localStorage.getItem('agent8_results') || '[]');
+
+            if (results.length === 0) {
+                container.innerHTML = '<div class="no-results">Noch keine Tests durchgeführt. Klicke auf "Test Agent 8 durchführen"!</div>';
+                return;
+            }
+
+            container.innerHTML = results.map((result, index) => {
+                const validation = result.validation || {};
+                const score = validation.quality_score || 0;
+                const ready = validation.ready_for_generation;
+                const issues = validation.issues || [];
+                const issuesCount = validation.issues_count || 0;
+
+                let scoreClass = '';
+                let badgeClass = 'badge-success';
+
+                if (score < 0.5) {
+                    scoreClass = 'very-low';
+                    badgeClass = 'badge-error';
+                } else if (score < 0.7) {
+                    scoreClass = 'low';
+                    badgeClass = 'badge-warning';
+                }
+
+                const time = new Date(result.timestamp).toLocaleString('de-DE');
+
+                return `
+                    <div class="result-item ${result.status === 'error' ? 'error' : ''}">
+                        <div class="result-header">
+                            <div>
+                                <div class="result-score ${scoreClass}">${score.toFixed(2)}</div>
+                                <span class="result-badge ${badgeClass}">
+                                    ${ready ? '✅ Ready' : '⚠️ Not Ready'}
+                                </span>
+                            </div>
+                            <div class="result-time">${time}</div>
+                        </div>
+                        <div class="result-details">
+                            <div><strong>Issues:</strong> ${issuesCount}</div>
+                            ${issues.length > 0 ? `<div style="margin-top: 5px;">📋 ${issues.join(', ')}</div>` : ''}
+                            <div style="margin-top: 5px;"><strong>Generation Mode:</strong> ${result.generation_mode || 'N/A'}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Clear results (for debugging)
+        function clearResults() {
+            if (confirm('Alle Test-Ergebnisse löschen?')) {
+                localStorage.removeItem('agent8_results');
+                loadResults();
+            }
+        }
+    </script>
+</body>
+</html>
