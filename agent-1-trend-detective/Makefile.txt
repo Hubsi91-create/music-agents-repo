@@ -1,0 +1,71 @@
+Makefile for Music Inspiration Generator Agent
+Google Cloud Vertex AI Agent Development Kit (ADK)
+PROJECT_ID = musikvideo-prompt-agent
+REGION = us-central1
+AGENT_NAME = music-inspiration-generator
+DISPLAY_NAME = "Music Inspiration Generator"
+STAGING_BUCKET = gs://$(PROJECT_ID)-agent-staging
+
+.PHONY: help install playground deploy test clean setup-bucket
+
+help:
+@echo "Music Inspiration Generator - ADK Deployment Commands"
+@echo ""
+@echo "Available targets:"
+@echo " make setup-bucket - Create GCS staging bucket"
+@echo " make install - Install Python dependencies"
+@echo " make playground - Run ADK playground for local testing"
+@echo " make test - Test agent locally"
+@echo " make deploy - Deploy agent to Vertex AI Agent Engine"
+@echo " make clean - Clean temporary files"
+@echo ""
+
+install:
+@echo "Installing dependencies..."
+pip install -r requirements.txt
+@echo "Dependencies installed successfully!"
+
+setup-bucket:
+@echo "Setting up GCS staging bucket..."
+-gsutil mb -p $(PROJECT_ID) -l $(REGION) $(STAGING_BUCKET)
+@echo "Staging bucket ready!"
+
+playground:
+@echo "Starting ADK playground..."
+@echo "Open your browser to test the agent interactively"
+adk web
+
+test:
+@echo "Testing agent locally..."
+python agent.py
+
+deploy: setup-bucket
+@echo "Deploying $(DISPLAY_NAME) to Vertex AI Agent Engine..."
+@echo "Project: $(PROJECT_ID)"
+@echo "Region: $(REGION)"
+@echo "Staging Bucket: $(STAGING_BUCKET)"
+adk deploy agent_engine
+--project=$(PROJECT_ID)
+--region=$(REGION)
+--staging_bucket=$(STAGING_BUCKET)
+--display_name=$(DISPLAY_NAME)
+--requirements_file=requirements.txt
+.
+@echo "Deployment complete!"
+@echo "Check Google Cloud Console: https://console.cloud.google.com/vertex-ai/agents/agent-engines?project=$(PROJECT_ID)"
+
+clean:
+@echo "Cleaning temporary files..."
+find . -type d -name "pycache" -exec rm -rf {} +
+find . -type f -name ".pyc" -delete
+find . -type f -name ".pyo" -delete
+find . -type f -name ".DS_Store" -delete
+@echo "Cleanup complete!"
+
+init:
+@echo "Creating .env file..."
+@echo "GOOGLE_GENAI_USE_VERTEXAI=1" > .env
+@echo "GOOGLE_CLOUD_PROJECT=$(PROJECT_ID)" >> .env
+@echo "GOOGLE_CLOUD_LOCATION=$(REGION)" >> .env
+@echo ".env file created!"
+@echo "Please review and update if needed."

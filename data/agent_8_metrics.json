@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-11-12T22:27:42.261216"
+  },
+  "summary": {
+    "total": 2,
+    "avg_quality": 0.815,
+    "success_rate": 1.0
+  },
+  "records": [
+    {
+      "id": "val_1762986470893",
+      "timestamp": "2025-11-12T22:27:50.893315",
+      "storyboard_id": "scene_001",
+      "prompt_snippet": "Woman walks to window in modern apartment...",
+      "prompt_type": "veo_3.1",
+      "genre": "reggaeton",
+      "quality_score": 0.85,
+      "ready": true,
+      "issues": [
+        "Dialog too long"
+      ],
+      "fixes": [
+        "Trimmed dialog"
+      ],
+      "generation_success": true,
+      "generation_quality": 0.88,
+      "user_rating": null,
+      "user_notes": null,
+      "feedback_timestamp": "2025-11-12T22:27:50.893984"
+    },
+    {
+      "id": "val_1762986478637",
+      "timestamp": "2025-11-12T22:27:58.637330",
+      "storyboard_id": "scene_001",
+      "prompt_snippet": "[IDENTITY] Woman, 30s\n        [CINEMATOGRAPHY] Dolly-in\n        [ENVIRONMENT] Modern apartment\n        [PERFORMANCE] Walks to window\n        [AUDIO] D...",
+      "prompt_type": "veo_3.1",
+      "genre": "reggaeton",
+      "quality_score": 0.78,
+      "ready": true,
+      "issues": [
+        "Missing or insufficient negative prompts"
+      ],
+      "fixes": [],
+      "generation_success": true,
+      "generation_quality": 0.88,
+      "user_rating": 5,
+      "user_notes": "Perfect!",
+      "feedback_timestamp": "2025-11-12T22:27:58.638025"
+    }
+  ],
+  "by_genre": {
+    "reggaeton": {
+      "count": 2,
+      "avg_score": 0.815,
+      "ready_rate": 1.0,
+      "success_rate": 1.0
+    }
+  },
+  "by_type": {
+    "veo_3.1": {
+      "count": 2,
+      "avg_score": 0.815,
+      "success_rate": 1.0
+    }
+  }
+}

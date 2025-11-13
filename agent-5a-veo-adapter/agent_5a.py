@@ -30,15 +30,23 @@ def generate_veo_prompt(scene, quality_score):
     """
     base_prompt = scene["screenplay_text"]
     mood = ", ".join(scene.get("mood", ["professional"]))
-    
+
     if quality_score >= 85:
         veo_spec = "4K professional cinema, cinematic color grading, professional lighting"
     elif quality_score >= 70:
         veo_spec = "1080p professional, clean lighting, professional color"
     else:
         veo_spec = "720p standard quality"
-    
-    return f"{base_prompt}. {mood}. {veo_spec}. Professional music video production."
+
+    final_prompt = f"{base_prompt}. {mood}. {veo_spec}. Professional music video production."
+
+    # Agent 8 Validation
+    validated = validate_with_agent8(final_prompt, mood)
+    if validated and validated.get("validation", {}).get("ready_for_generation"):
+        final_prompt = validated["refined_prompt"]
+        print(f"[Agent 8] ✅ Prompt validated - Score: {validated['validation']['quality_score']}")
+
+    return final_prompt
 
 def main():
     if len(sys.argv) < 2:
@@ -65,6 +73,25 @@ def main():
     except Exception as e:
         print(f"[ERROR] {str(e)}")
         sys.exit(1)
+
+def validate_with_agent8(prompt, genre):
+    """Schickt Prompt an Agent 8 zur Validierung"""
+    import requests
+
+    try:
+        response = requests.post(
+            "http://localhost:5000/validate",
+            json={
+                "prompt": prompt,
+                "prompt_type": "veo_3.1",
+                "genre": genre if genre else "pop"
+            },
+            timeout=10
+        )
+        return response.json()
+    except Exception as e:
+        print(f"[Agent 8] ⚠️  Nicht erreichbar: {e}")
+        return None
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Agent 8 Training Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 { font-size: 32px; margin-bottom: 8px; }
+        .header p { font-size: 16px; opacity: 0.9; }
+        .content { padding: 32px; }
+        .section { margin-bottom: 32px; }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 8px 0;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .status-excellent { background: #d4edda; color: #155724; }
+        .status-good { background: #d1ecf1; color: #0c5460; }
+        .status-fair { background: #fff3cd; color: #856404; }
+        .status-poor { background: #f8d7da; color: #721c24; }
+        .genre-row {
+            background: #f8f9fa;
+            padding: 16px;
+            margin: 8px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            border-left: 4px solid #667eea;
+        }
+        .genre-name { font-weight: 600; color: #333; }
+        .genre-stats { display: flex; gap: 24px; }
+        .genre-stat { text-align: center; }
+        .genre-stat-label { font-size: 11px; color: #666; text-transform: uppercase; }
+        .genre-stat-value { font-size: 16px; font-weight: 700; color: #667eea; }
+        .rec-card {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f3e5f5 100%);
+            padding: 16px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .rec-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .rec-genre { font-weight: 600; }
+        .rec-text { font-size: 14px; color: #555; line-height: 1.5; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        tr:hover { background: #f8f9fa; }
+        .score-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        .footer {
+            text-align: center;
+            padding: 16px;
+            background: #f8f9fa;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Agent 8 Training Dashboard</h1>
+            <p>Video Generation Quality Assurance - Training Metrics</p>
+        </div>
+        <div class="content">
+
+        <div class="section">
+            <h2 class="section-title">📊 System Overview</h2>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Total Validations</div>
+                    <div class="metric-value">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Avg Quality</div>
+                    <div class="metric-value">0.00</div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: 0.0%"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Success Rate</div>
+                    <div class="metric-value">0%</div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: 0.0%"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">System Status</div>
+                    <div class="status-badge status-poor">🔴 Needs attention</div>
+                </div>
+            </div>
+        </div>
+<div class="section"><h2 class="section-title">🎵 Genre Performance</h2></div><div class="section"><h2 class="section-title">💡 Recommendations</h2></div><div class="section">
+            <h2 class="section-title">📋 Recent Validations</h2>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Genre</th>
+                    <th>Type</th>
+                    <th>Quality</th>
+                    <th>Ready</th>
+                    <th>Generated</th>
+                </tr>
+</table></div>
+        </div>
+        <div class="footer">
+            Generated at 2025-11-12 22:27:42
+        </div>
+    </div>
+</body>
+</html>
