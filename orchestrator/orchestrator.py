@@ -15,21 +15,21 @@ def load_agent_results():
     try:
         with open("../agent-6-influencer-matcher/influencers.json", 'r', encoding='utf-8') as f:
             results["agents"]["agent_6"] = json.load(f)
-    except:
+    except Exception as e:
         results["agents"]["agent_6"] = {"error": "not found"}
     
     # Agent 7a: Distribution
     try:
         with open("../agent-7-distribution-metadata/distribution_strategy.json", 'r', encoding='utf-8') as f:
             results["agents"]["agent_7a"] = json.load(f)
-    except:
+    except Exception as e:
         results["agents"]["agent_7a"] = {"error": "not found"}
     
     # Agent 7b: Metadata
     try:
         with open("../agent-7-distribution-metadata/metadata.json", 'r', encoding='utf-8') as f:
             results["agents"]["agent_7b"] = json.load(f)
-    except:
+    except Exception as e:
         results["agents"]["agent_7b"] = {"error": "not found"}
     
     return results
