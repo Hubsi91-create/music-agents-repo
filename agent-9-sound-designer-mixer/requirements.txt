@@ -1,0 +1,9 @@
+﻿librosa
+numpy
+pydub
+librosa
+scipy
+soundfile
+loudness-meter
+pyaudio
+numba

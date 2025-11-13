@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-11-11T01:36:41.955665",
+  "music_title": "Dancing in the Heat",
+  "music_duration_seconds": 138.4,
+  "quality_score": 85,
+  "concept_type": "Premium High-Quality",
+  "screenplay": [
+    {
+      "scene_number": 1,
+      "duration_seconds": 10,
+      "concept_description": "Intro mit Logo Animation",
+      "screenplay_text": "[Scene 1 - ULTRA DETAILED] Intro mit Logo Animation",
+      "visual_elements": [
+        "animation"
+      ],
+      "mood": [
+        "cinematic",
+        "professional",
+        "premium"
+      ]
+    },
+    {
+      "scene_number": 2,
+      "duration_seconds": 30,
+      "concept_description": "Main Performance",
+      "screenplay_text": "[Scene 2 - ULTRA DETAILED] Main Performance",
+      "visual_elements": [
+        "standard_shot"
+      ],
+      "mood": [
+        "cinematic",
+        "professional",
+        "premium"
+      ]
+    },
+    {
+      "scene_number": 3,
+      "duration_seconds": 20,
+      "concept_description": "Outro mit Credits",
+      "screenplay_text": "[Scene 3 - ULTRA DETAILED] Outro mit Credits",
+      "visual_elements": [
+        "standard_shot"
+      ],
+      "mood": [
+        "cinematic",
+        "professional",
+        "premium"
+      ]
+    }
+  ]
+}

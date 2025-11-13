@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-11-11T00:56:56.454509",
+  "music_title": "Dancing in the Heat",
+  "music_duration_seconds": 138.4,
+  "quality_score": 85,
+  "concept_type": "Premium High-Quality",
+  "total_video_duration": 60,
+  "scenes": [
+    {
+      "scene": 1,
+      "duration": 10,
+      "description": "Intro mit Logo Animation"
+    },
+    {
+      "scene": 2,
+      "duration": 30,
+      "description": "Main Performance"
+    },
+    {
+      "scene": 3,
+      "duration": 20,
+      "description": "Outro mit Credits"
+    }
+  ],
+  "recommended_resolution": "1920x1080",
+  "recommended_fps": 60
+}
