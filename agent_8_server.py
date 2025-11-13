@@ -209,6 +209,63 @@ def test_validation():
         }), 500
 
 
+# Google Cloud Function Entry Point
+def validate_prompt(request):
+    """
+    Google Cloud Function Entry Point
+    Konvertiert Cloud Request zu Flask Request
+    """
+    try:
+        # Check if agent8 is initialized
+        if not agent8:
+            return {"error": "Agent 8 not initialized"}, 500
+
+        # Parse JSON from request
+        request_json = request.get_json()
+
+        if not request_json:
+            return {"error": "No JSON data provided"}, 400
+
+        # Extract parameters
+        prompt = request_json.get("prompt", "")
+        prompt_type = request_json.get("prompt_type", "veo_3.1")
+        genre = request_json.get("genre", "pop")
+
+        if not prompt:
+            return {"error": "prompt field is required"}, 400
+
+        logger.info(f"📥 Cloud validation request: {prompt_type} ({genre})")
+
+        # Run Agent 8 validation
+        report = agent8.validate_and_refine(prompt, prompt_type, genre)
+
+        # Format response
+        result = {
+            "status": "success",
+            "timestamp": datetime.now().isoformat(),
+            "validation": {
+                "quality_score": round(report.validation_scores.overall_quality_score, 2),
+                "ready_for_generation": report.ready_for_generation,
+                "issues_count": len(report.issues_found),
+                "issues": [issue.message for issue in report.issues_found[:5]],
+                "recommendations": report.recommendations[:3]
+            },
+            "refined_prompt": report.refined_prompt,
+            "generation_mode": report.generation_mode_recommendation
+        }
+
+        logger.info(f"✅ Cloud validation complete: Score={result['validation']['quality_score']}")
+
+        return result, 200
+
+    except Exception as e:
+        logger.error(f"❌ Cloud validation error: {e}")
+        return {
+            "error": str(e),
+            "status": "error"
+        }, 500
+
+
 if __name__ == "__main__":
     logger.info("🚀 Starting Agent 8 HTTP Server")
     logger.info("📍 http://localhost:5000")
