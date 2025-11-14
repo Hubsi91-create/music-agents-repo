@@ -1,0 +1,636 @@
+/* ═══════════════════════════════════════════════════════════
+   TIMELINE EDITOR STYLES - Neon Theme
+   ═══════════════════════════════════════════════════════════ */
+
+/* Main Editor Container */
+.editor {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: #0a0e27;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #1a1f3a;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e0e8ff;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.info {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: rgba(224, 232, 255, 0.7);
+}
+
+/* Controls Bar */
+.controls {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  background: rgba(26, 31, 58, 0.8);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupLabel {
+  font-size: 0.75rem;
+  color: rgba(224, 232, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Control Buttons */
+.controlBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid #00f0ff;
+  border-radius: 6px;
+  color: #00f0ff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 300ms ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.controlBtn:hover:not(:disabled) {
+  background: rgba(0, 240, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.controlBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.controlBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Specific Button Styles */
+.playBtn {
+  background: rgba(0, 240, 255, 0.2);
+  border-width: 2px;
+}
+
+.pauseBtn {
+  background: rgba(255, 195, 113, 0.2);
+  border-color: #ffc371;
+  color: #ffc371;
+  box-shadow: 0 0 10px rgba(255, 195, 113, 0.2);
+}
+
+.stopBtn {
+  background: rgba(255, 23, 68, 0.1);
+  border-color: #ff1744;
+  color: #ff1744;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.2);
+}
+
+.zoomBtn {
+  background: rgba(178, 75, 255, 0.1);
+  border-color: #b24bff;
+  color: #b24bff;
+  box-shadow: 0 0 10px rgba(178, 75, 255, 0.2);
+}
+
+.zoomDisplay {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #e0e8ff;
+  min-width: 50px;
+  text-align: center;
+}
+
+.saveBtn {
+  background: rgba(0, 240, 255, 0.2);
+}
+
+.exportContainer {
+  position: relative;
+}
+
+.exportBtn {
+  background: rgba(178, 75, 255, 0.1);
+  border-color: #b24bff;
+  color: #b24bff;
+  box-shadow: 0 0 10px rgba(178, 75, 255, 0.2);
+}
+
+.exportMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background: #1a1f3a;
+  border: 1px solid #b24bff;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 150px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.exportMenu button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: #e0e8ff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.exportMenu button:hover {
+  background: rgba(178, 75, 255, 0.2);
+  color: #b24bff;
+}
+
+.downloadBtn {
+  background: rgba(255, 23, 68, 0.1);
+  border-color: #ff1744;
+  color: #ff1744;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.2);
+}
+
+.undoBtn,
+.redoBtn {
+  background: rgba(178, 75, 255, 0.1);
+  border-color: #b24bff;
+  color: #b24bff;
+  box-shadow: 0 0 10px rgba(178, 75, 255, 0.2);
+}
+
+.deleteBtn {
+  background: rgba(255, 23, 68, 0.1);
+  border-color: #ff1744;
+  color: #ff1744;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.2);
+}
+
+/* Timeline Container */
+.timelineContainer {
+  padding: 1rem;
+  background: #0a0e27;
+  min-height: 250px;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  width: 100%;
+  background: #1a1f3a;
+  border-radius: 8px;
+  overflow-x: auto;
+  overflow-y: visible;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Ruler */
+.ruler {
+  position: relative;
+  height: 30px;
+  background: rgba(26, 31, 58, 0.8);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.rulerMarker {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rulerTick {
+  width: 1px;
+  height: 8px;
+  background: rgba(0, 240, 255, 0.5);
+}
+
+.rulerLabel {
+  font-size: 0.7rem;
+  color: rgba(224, 232, 255, 0.6);
+  margin-top: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+/* Track */
+.track {
+  position: relative;
+  min-height: 150px;
+  padding: 1rem 0;
+}
+
+/* Waveform */
+.waveformContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.waveform {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.waveformCanvas {
+  width: 100%;
+  height: 100%;
+}
+
+.waveformLoading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(224, 232, 255, 0.3);
+  font-size: 0.85rem;
+}
+
+/* Grid */
+.grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gridLine {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(0, 240, 255, 0.1);
+}
+
+/* Scenes Container */
+.scenesContainer {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  margin-top: 20px;
+  z-index: 10;
+}
+
+/* Scene Block */
+.sceneBlock {
+  position: absolute;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: grab;
+  transition: all 200ms ease;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sceneBlock:active {
+  cursor: grabbing;
+}
+
+.sceneBlock.selected {
+  border-color: #00f0ff;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+  z-index: 20;
+}
+
+.sceneNumber {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.sceneDuration {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Scene Tooltip */
+.sceneTooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 0.75rem;
+  background: #1a1f3a;
+  border: 1px solid #00f0ff;
+  border-radius: 6px;
+  min-width: 200px;
+  max-width: 300px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.sceneTooltip div {
+  color: #e0e8ff;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.tooltipPrompt {
+  margin-top: 0.5rem;
+  color: rgba(224, 232, 255, 0.7);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.tooltipStyle {
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 240, 255, 0.1);
+  border-radius: 3px;
+  color: #00f0ff;
+  font-size: 0.7rem;
+  display: inline-block;
+}
+
+/* Resize Handles */
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 30;
+}
+
+.resizeLeft {
+  left: 0;
+}
+
+.resizeRight {
+  right: 0;
+}
+
+.resizeIndicator {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 240, 255, 0.3);
+  border-left: 2px solid #00f0ff;
+  border-right: 2px solid #00f0ff;
+}
+
+.resizeHandle:hover .resizeIndicator {
+  background: rgba(0, 240, 255, 0.5);
+}
+
+/* Delete Button */
+.deleteButton {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 23, 68, 0.8);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 23, 68, 0.5);
+  z-index: 40;
+}
+
+/* Context Menu */
+.contextMenu {
+  position: absolute;
+  background: #1a1f3a;
+  border: 1px solid #00f0ff;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 150px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.contextMenu button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: #e0e8ff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.contextMenu button:hover {
+  background: rgba(0, 240, 255, 0.2);
+  color: #00f0ff;
+}
+
+/* Playhead */
+.playhead {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  z-index: 50;
+}
+
+.playheadLine {
+  width: 100%;
+  height: 100%;
+  background: #ff1744;
+  box-shadow: 0 0 15px rgba(255, 23, 68, 0.6);
+  animation: playheadGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes playheadGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 23, 68, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 23, 68, 0.9);
+  }
+}
+
+.playhead.dragging .playheadLine {
+  animation: none;
+}
+
+.playheadHandle {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: #ff1744;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(255, 23, 68, 0.8);
+  cursor: grab;
+}
+
+.playheadHandle:active {
+  cursor: grabbing;
+}
+
+.playheadTooltip {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.5rem;
+  background: #ff1744;
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: 'Courier New', monospace;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* Details Panel */
+.detailsPanel {
+  padding: 1rem 1.5rem;
+  background: rgba(26, 31, 58, 0.5);
+  border-top: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.sceneDetails {
+  background: rgba(26, 31, 58, 0.8);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.sceneDetails h3 {
+  margin: 0 0 1rem 0;
+  color: #00f0ff;
+  font-size: 1.1rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+.detailRow span:first-child {
+  color: rgba(224, 232, 255, 0.6);
+}
+
+.detailRow span:last-child {
+  color: #e0e8ff;
+  font-weight: 500;
+}
+
+.promptPreview {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.promptPreview strong {
+  color: #00f0ff;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.promptPreview p {
+  margin: 0;
+  color: rgba(224, 232, 255, 0.8);
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+/* Keyboard Shortcuts Help */
+.shortcuts {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(0, 240, 255, 0.05);
+  border-top: 1px solid rgba(0, 240, 255, 0.1);
+  font-size: 0.75rem;
+  color: rgba(224, 232, 255, 0.6);
+  flex-wrap: wrap;
+}
+
+.shortcuts span:first-child {
+  font-weight: 600;
+  color: #00f0ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls {
+    gap: 1rem;
+  }
+
+  .controlBtn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .scenesContainer {
+    height: 60px;
+  }
+
+  .sceneBlock {
+    height: 60px;
+  }
+}

@@ -1,0 +1,461 @@
+/* ═══════════════════════════════════════════════════════════
+   VIDEO PLAYER STYLES - Neon Theme
+   ═══════════════════════════════════════════════════════════ */
+
+/* Main Player Container */
+.player {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #0a0e27;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Header */
+.header {
+  padding: 1rem 1.5rem;
+  background: #1a1f3a;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e0e8ff;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+/* Video Container */
+.videoContainer {
+  position: relative;
+  width: 100%;
+  background: #000;
+  aspect-ratio: 16 / 9;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: pointer;
+}
+
+/* Buffering Overlay */
+.bufferingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(0, 240, 255, 0.2);
+  border-top-color: #00f0ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Play Overlay */
+.playOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 5;
+}
+
+.playButton {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 240, 255, 0.2);
+  border: 3px solid #00f0ff;
+  border-radius: 50%;
+  color: #00f0ff;
+  transition: all 300ms ease;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+.playButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.8);
+}
+
+.playButton svg {
+  width: 40px;
+  height: 40px;
+  margin-left: 4px;
+}
+
+/* Controls Container */
+.controls {
+  background: #1a1f3a;
+  padding: 1rem;
+}
+
+/* Progress Bar */
+.progressBar {
+  width: 100%;
+  height: 8px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #00f0ff, #00d4e6);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  transition: width 0.1s linear;
+}
+
+.progressHandle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: #00f0ff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.progressHandle:hover {
+  box-shadow: 0 0 20px rgba(0, 240, 255, 1);
+}
+
+/* Controls Row */
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Base Button */
+.button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid #00f0ff;
+  border-radius: 6px;
+  color: #00f0ff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 300ms ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.button:hover {
+  background: rgba(0, 240, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Play/Pause Button */
+.playPauseBtn {
+  background: rgba(0, 240, 255, 0.2);
+  border-width: 2px;
+}
+
+.playPauseBtn:hover {
+  background: rgba(0, 240, 255, 0.3);
+}
+
+/* Time Display */
+.timeDisplay {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #e0e8ff;
+  min-width: 100px;
+}
+
+/* Volume Control */
+.volumeControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.volumeSlider {
+  width: 80px;
+  height: 6px;
+  cursor: pointer;
+}
+
+.volumeTrack {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.volumeFill {
+  height: 100%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  transition: width 0.1s ease;
+}
+
+/* Quality Selector */
+.qualitySelector {
+  position: relative;
+}
+
+.qualityButton {
+  padding: 0.5rem 1rem;
+  background: rgba(178, 75, 255, 0.1);
+  border: 1px solid #b24bff;
+  border-radius: 6px;
+  color: #b24bff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 300ms ease;
+  box-shadow: 0 0 10px rgba(178, 75, 255, 0.2);
+}
+
+.qualityButton:hover {
+  background: rgba(178, 75, 255, 0.2);
+  box-shadow: 0 0 15px rgba(178, 75, 255, 0.5);
+}
+
+.qualityDropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 0.5rem;
+  background: #1a1f3a;
+  border: 1px solid #b24bff;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 100px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.qualityOption {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: #e0e8ff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.qualityOption:hover {
+  background: rgba(178, 75, 255, 0.2);
+  color: #b24bff;
+}
+
+.qualityOption.selected {
+  background: rgba(178, 75, 255, 0.3);
+  color: #b24bff;
+  font-weight: 600;
+}
+
+/* Speed Selector */
+.speedSelector {
+  position: relative;
+}
+
+.speedButton {
+  padding: 0.5rem 1rem;
+  background: rgba(178, 75, 255, 0.1);
+  border: 1px solid #b24bff;
+  border-radius: 6px;
+  color: #b24bff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 300ms ease;
+  box-shadow: 0 0 10px rgba(178, 75, 255, 0.2);
+}
+
+.speedButton:hover {
+  background: rgba(178, 75, 255, 0.2);
+  box-shadow: 0 0 15px rgba(178, 75, 255, 0.5);
+}
+
+.speedDropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 0.5rem;
+  background: #1a1f3a;
+  border: 1px solid #b24bff;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 80px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.speedOption {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: #e0e8ff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.speedOption:hover {
+  background: rgba(178, 75, 255, 0.2);
+  color: #b24bff;
+}
+
+.speedOption.selected {
+  background: rgba(178, 75, 255, 0.3);
+  color: #b24bff;
+  font-weight: 600;
+}
+
+/* Download Button */
+.downloadBtn {
+  background: rgba(255, 23, 68, 0.1);
+  border-color: #ff1744;
+  color: #ff1744;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.2);
+}
+
+.downloadBtn:hover {
+  background: rgba(255, 23, 68, 0.2);
+  box-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
+}
+
+/* Share Menu */
+.shareContainer {
+  position: relative;
+}
+
+.shareBtn {
+  background: rgba(178, 75, 255, 0.1);
+  border-color: #b24bff;
+  color: #b24bff;
+  box-shadow: 0 0 10px rgba(178, 75, 255, 0.2);
+}
+
+.shareBtn:hover {
+  background: rgba(178, 75, 255, 0.2);
+  box-shadow: 0 0 15px rgba(178, 75, 255, 0.5);
+}
+
+.shareMenu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 0.5rem;
+  background: #1a1f3a;
+  border: 1px solid #b24bff;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 150px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.shareMenu button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: #e0e8ff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.shareMenu button:hover {
+  background: rgba(178, 75, 255, 0.2);
+  color: #b24bff;
+}
+
+/* Fullscreen Button */
+.fullscreenBtn {
+  margin-left: auto;
+}
+
+/* Keyboard Shortcuts Help */
+.shortcuts {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 240, 255, 0.05);
+  border-top: 1px solid rgba(0, 240, 255, 0.1);
+  font-size: 0.75rem;
+  color: rgba(224, 232, 255, 0.6);
+  flex-wrap: wrap;
+}
+
+.shortcuts span:first-child {
+  font-weight: 600;
+  color: #00f0ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controlsRow {
+    gap: 0.5rem;
+  }
+
+  .button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .timeDisplay {
+    font-size: 0.8rem;
+    min-width: 80px;
+  }
+
+  .shortcuts {
+    font-size: 0.65rem;
+    gap: 0.5rem;
+  }
+}
