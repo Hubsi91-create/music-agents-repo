@@ -446,7 +446,7 @@ def main():
             result = run_holistic_training(verbose=verbose)
 
             if result['status'] == 'success':
-                print(f"\n[SUCCESS] ✅ Holistic Training Completed!")
+                print(f"\n[SUCCESS] Holistic Training Completed!")
                 print(f"[SUCCESS] Duration: {result.get('total_time_minutes', 0):.2f} minutes")
                 print(f"[SUCCESS] Agents Trained: {result.get('agents_trained', 0)}")
                 print(f"[SUCCESS] System Improvement: {result.get('system_quality_delta', 0):+.2f}%")
@@ -467,8 +467,11 @@ def main():
                 print(f"  Agents Online: {health.get('agents_online', 0)}")
                 print(f"  Agents Needing Attention: {len(health.get('agents_needing_attention', []))}")
                 print(f"  Next Training: {health.get('next_training', 'unknown')}")
+            elif stats['status'] == 'unavailable':
+                print(f"\n[WARNING] Stats Unavailable: {stats.get('message', 'Training modules not available')}")
+                print(f"[INFO] Install dependencies: pip install -r requirements.txt")
             else:
-                print(f"\n[ERROR] Stats Failed: {stats.get('error', 'Unknown error')}")
+                print(f"\n[ERROR] Stats Failed: {stats.get('error', stats.get('message', 'Unknown error'))}")
 
         # Handle enhanced training (existing)
         elif command == 'enhanced-train':
@@ -478,7 +481,7 @@ def main():
             result = enhanced_training_pipeline(iterations=iterations, min_score=min_score)
 
             if result['status'] == 'success':
-                print(f"\n[SUCCESS] ✅ Enhanced Training Completed!")
+                print(f"\n[SUCCESS] Enhanced Training Completed!")
                 print(f"[SUCCESS] Harvested: {result['harvesting']['total_harvested']} prompts")
                 print(f"[SUCCESS] Trained with: {result['training']['prompts_selected']} top prompts")
             else:
@@ -503,10 +506,10 @@ def main():
             with open('orchestration_report.json', 'w', encoding='utf-8') as f:
                 json.dump(orchestration, f, indent=2, ensure_ascii=False)
 
-            print(f"[SUCCESS] 🎉 7-Agent System Orchestrated!")
+            print(f"[SUCCESS] 7-Agent System Orchestrated!")
             print(f"[SUCCESS] All 7 Agents Coordinated & Ready!")
             print(f"[SAVED] Orchestration Report: orchestration_report.json")
-            print(f"\n[STATUS] MUSIC PRODUCTION SYSTEM: PRODUCTION-READY ✅")
+            print(f"\n[STATUS] MUSIC PRODUCTION SYSTEM: PRODUCTION-READY")
 
     except Exception as e:
         print(f"[ERROR] {str(e)}")
