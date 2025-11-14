@@ -16,6 +16,7 @@ import random
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 from database import get_db
+from data_providers import initialize_provider, get_data_provider
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -27,6 +28,13 @@ logger = logging.getLogger(__name__)
 
 # Initialize database
 db = get_db()
+
+# Initialize Data Provider (cloud-ready abstraction layer)
+# Switches between local files and cloud APIs based on ENVIRONMENT variable
+DATA_PROVIDER = initialize_provider(
+    environment=os.getenv('ENVIRONMENT', 'local')
+)
+logger.info(f"✅ Data Provider initialized: {DATA_PROVIDER.__class__.__name__}")
 
 # Track server start time for uptime calculations
 SERVER_START_TIME = datetime.now()
@@ -141,14 +149,29 @@ def agents_status():
     """
     Agents Status - Current status of all agents
     Returns: List of agents with current status
+
+    ✅ CLOUD-READY: Uses DataProvider (works local AND cloud)
     """
     try:
-        agents = generate_mock_agent_data()
+        # Get REAL agent status from DataProvider (local files or cloud API)
+        agents_data = DATA_PROVIDER.get_agents_status()
+
+        if 'error' in agents_data:
+            logger.warning(f"Agents status error: {agents_data.get('error')}")
+            return jsonify({
+                "timestamp": datetime.now().isoformat(),
+                "total_agents": 0,
+                "agents": [],
+                "error": agents_data.get('error')
+            }), 200
 
         response = {
             "timestamp": datetime.now().isoformat(),
-            "total_agents": len(agents),
-            "agents": agents
+            "total_agents": agents_data.get('total', 0),
+            "online": agents_data.get('online', 0),
+            "offline": agents_data.get('offline', 0),
+            "agents": agents_data.get('agents', []),
+            "data_source": agents_data.get('source', 'unknown')
         }
 
         return jsonify(response), 200
@@ -241,42 +264,53 @@ def training_status():
     """
     Training Status - Current training pipeline status
     Returns: Active training sessions and progress
+
+    ✅ CLOUD-READY: Uses DataProvider (works local AND cloud)
     """
     try:
-        # Get latest training session from database if available
-        latest_session = db.get_latest_training_session()
+        # Get REAL training status from DataProvider (local files or cloud API)
+        training_data = DATA_PROVIDER.get_training_status()
 
-        if latest_session:
-            status_data = {
+        if 'error' in training_data:
+            logger.warning(f"Training status error: {training_data.get('message', 'Unknown error')}")
+            # Return error but keep API contract
+            return jsonify({
+                "timestamp": datetime.now().isoformat(),
                 "active": False,
-                "last_session": latest_session,
-                "next_scheduled": (datetime.now() + timedelta(hours=2)).isoformat()
-            }
-        else:
-            # Mock data if no sessions in database
-            status_data = {
-                "active": False,
-                "last_session": {
-                    "start_time": (datetime.now() - timedelta(hours=3)).isoformat(),
-                    "end_time": (datetime.now() - timedelta(hours=2)).isoformat(),
-                    "duration_seconds": 3600,
-                    "agents_trained": 7,
-                    "overall_improvement": 5.2,
-                    "status": "success"
-                },
-                "next_scheduled": (datetime.now() + timedelta(hours=2)).isoformat()
-            }
+                "status": "unavailable",
+                "error": training_data.get('message')
+            }), 200
 
+        # Determine if training is active
+        status = training_data.get('status', 'idle')
+        is_active = status in ['running', 'in_progress', 'active']
+
+        # Calculate progress percentage
+        current = training_data.get('current_iteration', 0)
+        total = training_data.get('total_iterations', 100)
+        progress_pct = training_data.get('progress_percentage', 0)
+
+        # Build response maintaining API contract
         response = {
             "timestamp": datetime.now().isoformat(),
-            **status_data
+            "active": is_active,
+            "status": status,
+            "phase": training_data.get('phase', 'idle'),
+            "current_iteration": current,
+            "total_iterations": total,
+            "progress_percentage": progress_pct,
+            "start_time": training_data.get('start_time'),
+            "elapsed_seconds": training_data.get('elapsed_seconds', 0),
+            "estimated_completion_seconds": training_data.get('estimated_completion'),
+            "data_source": training_data.get('source', 'unknown'),
+            "next_scheduled": (datetime.now() + timedelta(hours=2)).isoformat() if not is_active else None
         }
 
         return jsonify(response), 200
 
     except Exception as e:
         logger.error(f"Error in training_status: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e), "timestamp": datetime.now().isoformat()}), 500
 
 @app.route('/api/training/history', methods=['GET'])
 def training_history():
@@ -331,25 +365,34 @@ def metrics_quality():
     """
     Quality Metrics - Quality scores across all agents
     Returns: Current and historical quality metrics
+
+    ✅ CLOUD-READY: Uses DataProvider (works local AND cloud)
     """
     try:
-        agents = generate_mock_agent_data()
+        # Get REAL metrics from DataProvider (local files or cloud API)
+        metrics = DATA_PROVIDER.get_metrics()
 
+        if 'error' in metrics:
+            logger.warning(f"Metrics error: {metrics.get('error')}")
+            return jsonify({
+                "timestamp": datetime.now().isoformat(),
+                "status": "unavailable",
+                "error": metrics.get('error')
+            }), 200
+
+        # Extract metrics with fallbacks
         quality_data = {
-            "timestamp": datetime.now().isoformat(),
-            "overall_quality": round(random.uniform(0.88, 0.96), 2),
-            "agents": [
-                {
-                    "agent_id": agent["id"],
-                    "agent_name": agent["name"],
-                    "current_score": agent["quality_score"],
-                    "avg_score_24h": round(random.uniform(0.85, 0.97), 2),
-                    "avg_score_7d": round(random.uniform(0.84, 0.96), 2),
-                    "trend": random.choice(["up", "stable", "down"])
-                }
-                for agent in agents
-            ]
+            "timestamp": metrics.get('timestamp', datetime.now().isoformat()),
+            "overall_quality": metrics.get('quality_score'),
+            "performance": metrics.get('performance'),
+            "efficiency": metrics.get('efficiency'),
+            "reliability": metrics.get('reliability'),
+            "data_source": metrics.get('source', 'unknown')
         }
+
+        # If we have agent-level metrics, include them
+        if 'agents' in metrics:
+            quality_data['agents'] = metrics['agents']
 
         return jsonify(quality_data), 200
 
@@ -432,32 +475,37 @@ def system_health():
     """
     System Health - Overall system health check
     Returns: System resource usage and status
+
+    ✅ CLOUD-READY: Uses DataProvider (works local AND cloud)
     """
     try:
-        # Get latest health from database if available
-        latest_health = db.get_latest_system_health()
+        # Get REAL system health from DataProvider (local files or cloud API)
+        health_data = DATA_PROVIDER.get_system_health()
 
-        if not latest_health:
-            # Generate mock health data
-            latest_health = {
-                "cpu_percent": round(random.uniform(10, 60), 1),
-                "memory_percent": round(random.uniform(30, 70), 1),
-                "disk_percent": round(random.uniform(40, 80), 1),
-                "uptime_seconds": get_uptime_seconds(),
-                "active_connections": random.randint(5, 50)
-            }
+        if 'error' in health_data:
+            logger.warning(f"System health error: {health_data.get('error')}")
+            return jsonify({
+                "timestamp": datetime.now().isoformat(),
+                "status": "unavailable",
+                "overall_health": 0,
+                "error": health_data.get('error')
+            }), 200
 
+        # Build response with real data
         health_status = {
-            "timestamp": datetime.now().isoformat(),
-            "status": "healthy",
-            "system_resources": latest_health,
-            "services": {
-                "database": "operational",
-                "api": "operational",
-                "agents": "operational",
-                "training": "operational"
-            }
+            "timestamp": health_data.get('timestamp', datetime.now().isoformat()),
+            "status": health_data.get('status', 'unknown'),
+            "overall_health": health_data.get('overall_health', 0),
+            "components": health_data.get('components', {}),
+            "data_source": health_data.get('source', 'unknown')
         }
+
+        # Add system resources if available
+        if 'system_resources' in health_data:
+            health_status['system_resources'] = health_data['system_resources']
+        else:
+            # Fallback to basic info
+            health_status['uptime_seconds'] = get_uptime_seconds()
 
         return jsonify(health_status), 200
 
