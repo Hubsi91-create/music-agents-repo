@@ -1,0 +1,22 @@
+{
+  "model": "veo-3.1",
+  "timestamp": "2025-11-11T01:36:41.955665",
+  "music_title": "Dancing in the Heat",
+  "prompts": [
+    {
+      "scene": 1,
+      "duration": 10,
+      "veo_prompt": "[Scene 1 - ULTRA DETAILED] Intro mit Logo Animation. cinematic, professional, premium. 4K professional cinema, cinematic color grading, professional lighting. Professional music video production."
+    },
+    {
+      "scene": 2,
+      "duration": 30,
+      "veo_prompt": "[Scene 2 - ULTRA DETAILED] Main Performance. cinematic, professional, premium. 4K professional cinema, cinematic color grading, professional lighting. Professional music video production."
+    },
+    {
+      "scene": 3,
+      "duration": 20,
+      "veo_prompt": "[Scene 3 - ULTRA DETAILED] Outro mit Credits. cinematic, professional, premium. 4K professional cinema, cinematic color grading, professional lighting. Professional music video production."
+    }
+  ]
+}

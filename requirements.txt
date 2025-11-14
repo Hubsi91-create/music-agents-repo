@@ -23,3 +23,26 @@ mypy>=1.6.0
 # Google Cloud SDK (for deployment)
 google-cloud-core>=2.3.3
 google-cloud-storage>=2.10.0
+
+# PROMPT HARVESTING MODULE
+# Dependencies for orchestrator/prompt_harvesting
+# Added: 2025-01-14
+
+# Reddit API
+praw>=7.7.0
+
+# Google Gemini AI
+google-generativeai>=0.3.0
+
+# Web Scraping
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# YouTube Transcript API
+youtube-transcript-api>=0.6.1
+
+# Environment Variables
+python-dotenv>=1.0.0
+
+# SQLite (included in Python standard library)
+# No additional package needed

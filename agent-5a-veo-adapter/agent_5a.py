@@ -44,7 +44,7 @@ def generate_veo_prompt(scene, quality_score):
     validated = validate_with_agent8(final_prompt, mood)
     if validated and validated.get("validation", {}).get("ready_for_generation"):
         final_prompt = validated["refined_prompt"]
-        print(f"[Agent 8] ✅ Prompt validated - Score: {validated['validation']['quality_score']}")
+        print(f"[Agent 8] [OK] Prompt validated - Score: {validated['validation']['quality_score']}")
 
     return final_prompt
 
@@ -90,7 +90,7 @@ def validate_with_agent8(prompt, genre):
         )
         return response.json()
     except Exception as e:
-        print(f"[Agent 8] ⚠️  Nicht erreichbar: {e}")
+        print(f"[Agent 8] [WARN] Nicht erreichbar: {e}")
         return None
 
 if __name__ == '__main__':

@@ -1,0 +1,67 @@
+{
+  "reddit": {
+    "subreddits": [
+      "RunwayML",
+      "PromptEngineering",
+      "VideoGeneration",
+      "OpenAI",
+      "StableDiffusion",
+      "ArtificialInteligence",
+      "MediaSynthesis"
+    ],
+    "limit": 100,
+    "sort": "hot",
+    "time_filter": "week"
+  },
+  "youtube": {
+    "search_queries": [
+      "Runway Gen-4 prompts",
+      "Veo 3.1 tutorial",
+      "AI video generation tutorial",
+      "Sora prompts",
+      "Pika prompts best",
+      "text to video AI"
+    ],
+    "max_results": 50
+  },
+  "web": {
+    "urls": [
+      "https://github.com/topics/prompt-engineering",
+      "https://github.com/topics/runway-ml",
+      "https://github.com/topics/video-generation"
+    ],
+    "timeout_seconds": 10
+  },
+  "quality": {
+    "threshold": 7.0,
+    "min_prompt_length": 20,
+    "max_prompt_length": 500,
+    "weights": {
+      "gemini": 0.40,
+      "community": 0.30,
+      "quality": 0.20,
+      "recency": 0.10
+    }
+  },
+  "harvesting": {
+    "auto_harvest_interval_hours": 24,
+    "max_prompts_per_run": 500,
+    "rate_limit_delay_seconds": 2
+  },
+  "gemini": {
+    "model": "gemini-2.5-flash",
+    "temperature": 0.7,
+    "max_output_tokens": 2048
+  },
+  "database": {
+    "path": "data/prompt_database.db",
+    "backup_enabled": true,
+    "backup_interval_days": 7
+  },
+  "training": {
+    "min_score_for_training": 7.0,
+    "batch_size": 100,
+    "max_iterations": 100,
+    "target_agents": ["prompt_refiner", "trainer", "veo_adapter", "runway_adapter"]
+  }
+}
