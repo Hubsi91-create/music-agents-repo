@@ -78,6 +78,9 @@ class DatabaseManager:
         - events
         - training_sessions
         - system_health
+        - api_keys (for encrypted API key storage)
+        - storyboard_videos
+        - storyboard_thumbnails
         """
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -135,6 +138,59 @@ class DatabaseManager:
                 )
             """)
 
+            # Table: api_keys (encrypted storage for API keys)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS api_keys (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id TEXT NOT NULL,
+                    service TEXT NOT NULL,
+                    encrypted_key TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(user_id, service)
+                )
+            """)
+
+            # Table: storyboard_videos
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS storyboard_videos (
+                    id TEXT PRIMARY KEY,
+                    user_id TEXT,
+                    project_name TEXT,
+                    song_title TEXT,
+                    music_file TEXT,
+                    genre TEXT,
+                    bpm INTEGER,
+                    engine TEXT,
+                    prompt TEXT,
+                    video_url TEXT,
+                    status TEXT,
+                    youtube_title TEXT,
+                    youtube_description TEXT,
+                    youtube_tags TEXT,
+                    cost REAL,
+                    credits_used INTEGER,
+                    duration INTEGER,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    completed_at TIMESTAMP,
+                    error_message TEXT
+                )
+            """)
+
+            # Table: storyboard_thumbnails
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS storyboard_thumbnails (
+                    id TEXT PRIMARY KEY,
+                    video_id TEXT,
+                    variant TEXT,
+                    image_url TEXT,
+                    click_prediction REAL,
+                    is_selected BOOLEAN DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (video_id) REFERENCES storyboard_videos(id)
+                )
+            """)
+
             # Create indexes for performance
             cursor.execute("""
                 CREATE INDEX IF NOT EXISTS idx_metrics_timestamp
@@ -154,6 +210,26 @@ class DatabaseManager:
             cursor.execute("""
                 CREATE INDEX IF NOT EXISTS idx_events_type
                 ON events(event_type)
+            """)
+
+            cursor.execute("""
+                CREATE INDEX IF NOT EXISTS idx_api_keys_user
+                ON api_keys(user_id)
+            """)
+
+            cursor.execute("""
+                CREATE INDEX IF NOT EXISTS idx_storyboard_videos_user
+                ON storyboard_videos(user_id)
+            """)
+
+            cursor.execute("""
+                CREATE INDEX IF NOT EXISTS idx_storyboard_videos_status
+                ON storyboard_videos(status)
+            """)
+
+            cursor.execute("""
+                CREATE INDEX IF NOT EXISTS idx_storyboard_thumbnails_video
+                ON storyboard_thumbnails(video_id)
             """)
 
             self.logger.info("Database tables initialized successfully")

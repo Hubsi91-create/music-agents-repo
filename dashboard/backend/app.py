@@ -36,6 +36,11 @@ DATA_PROVIDER = initialize_provider(
 )
 logger.info(f"✅ Data Provider initialized: {DATA_PROVIDER.__class__.__name__}")
 
+# Register Storyboard Blueprint
+from routes.storyboard_routes import storyboard_bp
+app.register_blueprint(storyboard_bp, url_prefix='/api/storyboard')
+logger.info("✅ Storyboard routes registered at /api/storyboard")
+
 # Track server start time for uptime calculations
 SERVER_START_TIME = datetime.now()
 
@@ -1194,7 +1199,17 @@ def root():
         "status": "operational",
         "timestamp": datetime.now().isoformat(),
         "endpoints_available": 26,
-        "documentation": "/api/docs"
+        "storyboard_endpoints_available": 18,
+        "total_endpoints": 44,
+        "documentation": "/api/docs",
+        "storyboard_health": "/api/storyboard/health",
+        "features": {
+            "encrypted_api_keys": True,
+            "video_generation": True,
+            "metadata_optimization": True,
+            "thumbnail_ab_testing": True,
+            "google_drive_integration": True
+        }
     }), 200
 
 # ============================================================
