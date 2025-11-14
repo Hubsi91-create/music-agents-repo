@@ -4,9 +4,14 @@ import { Dashboard } from './components/Dashboard'
 import { AgentStatus } from './components/AgentStatus'
 import { TrainingStatus } from './components/TrainingStatus'
 import { Metrics } from './components/Metrics'
+import { StoryboardView } from './components/storyboard/StoryboardView'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'agents' | 'training' | 'metrics'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'agents' | 'training' | 'metrics' | 'storyboard'>('overview')
+
+  if (activeTab === 'storyboard') {
+    return <StoryboardView onBack={() => setActiveTab('overview')} />
+  }
 
   return (
     <div className="app">
@@ -39,6 +44,12 @@ function App() {
           onClick={() => setActiveTab('metrics')}
         >
           Metrics
+        </button>
+        <button
+          className={activeTab === 'storyboard' ? 'active' : ''}
+          onClick={() => setActiveTab('storyboard')}
+        >
+          Storyboard
         </button>
       </nav>
 
