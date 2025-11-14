@@ -21,12 +21,50 @@ try:
     load_dotenv()
     print("✅ .env file loaded")
 except ImportError:
-    print("⚠️  python-dotenv not installed - using environment variables only")
-    print("   Install with: pip install python-dotenv")
+    pass
 
 # === CONFIGURATION ===
 STYLE_ANCHORS_DIR = Path("style_anchors")
 OUTPUT_DIR = STYLE_ANCHORS_DIR / "production_test"
+KEYS_DIR = Path("keys")
+
+def load_api_keys():
+    """Load API keys from JSON files in keys/ directory"""
+    keys = {}
+
+    # Try to load Google/Gemini key
+    google_key_file = KEYS_DIR / "google-key.json"
+    if google_key_file.exists():
+        try:
+            with open(google_key_file, 'r') as f:
+                google_data = json.load(f)
+                # Try different possible key names
+                for key_name in ['api_key', 'key', 'GEMINI_API_KEY', 'private_key']:
+                    if key_name in google_data:
+                        keys['GEMINI_API_KEY'] = google_data[key_name]
+                        os.environ['GEMINI_API_KEY'] = google_data[key_name]
+                        print(f"✅ Google/Gemini API key loaded from {google_key_file.name}")
+                        break
+        except Exception as e:
+            print(f"⚠️  Error loading {google_key_file}: {e}")
+
+    # Try to load Runway key
+    runway_key_file = KEYS_DIR / "runway-key.json"
+    if runway_key_file.exists():
+        try:
+            with open(runway_key_file, 'r') as f:
+                runway_data = json.load(f)
+                # Try different possible key names
+                for key_name in ['api_key', 'key', 'RUNWAY_API_KEY', 'token']:
+                    if key_name in runway_data:
+                        keys['RUNWAY_API_KEY'] = runway_data[key_name]
+                        os.environ['RUNWAY_API_KEY'] = runway_data[key_name]
+                        print(f"✅ Runway API key loaded from {runway_key_file.name}")
+                        break
+        except Exception as e:
+            print(f"⚠️  Error loading {runway_key_file}: {e}")
+
+    return keys
 
 # Test Prompts
 TEST_IMAGE_PROMPT = "A stunning professional music video scene: neon-lit cyberpunk cityscape at night, rain-slicked streets reflecting purple and blue lights, cinematic 4K, professional color grading, atmospheric volumetric lighting"
@@ -295,6 +333,10 @@ def main():
         print("❌ Please use --test-single flag")
         print("   Usage: python deploy_agents_5a_5b.py --production --test-single")
         sys.exit(1)
+
+    # Load API keys from JSON files
+    print("\n🔑 Loading API Keys...")
+    loaded_keys = load_api_keys()
 
     # Check for API keys
     print("\n🔑 Checking API Keys...")
