@@ -12,11 +12,11 @@ from typing import Dict, List
 import argparse
 
 # Import test modules
-from orchestrator_tests import OrchestratorTests
-from backend_tests import BackendTests
-from frontend_tests import FrontendTests
-from workflow_tests import WorkflowTests
-from performance_tests import PerformanceTests
+from .orchestrator_tests import OrchestratorTests
+from .backend_tests import BackendTests
+from .frontend_tests import FrontendTests
+from .workflow_tests import WorkflowTests
+from .performance_tests import PerformanceTests
 
 
 class IntegrationTestRunner:
