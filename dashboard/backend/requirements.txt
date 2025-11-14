@@ -1,0 +1,32 @@
+# Production Dashboard Backend Requirements
+# Music Agents Dashboard API v2.0
+
+# Core Flask
+flask==3.0.0
+flask-cors==4.0.0
+werkzeug==3.0.1
+
+# Configuration
+python-dotenv==1.0.0
+
+# System Monitoring
+psutil==5.9.6
+
+# HTTP Requests
+requests==2.31.0
+
+# Data Processing
+python-dateutil==2.8.2
+
+# Optional: WebSocket Support (for future real-time features)
+# python-socketio==5.10.0
+# python-engineio==4.8.0
+
+# Optional: Async Support (for future async endpoints)
+# flask-async==0.1.0
+
+# Development Dependencies (optional)
+# pytest==7.4.3
+# pytest-flask==1.3.0
+# black==23.12.1
+# flake8==6.1.0
