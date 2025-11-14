@@ -17,14 +17,21 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Any
 from database import get_db
 from data_providers import initialize_provider, get_data_provider
+from api_logger import initialize_api_logging, get_production_logger, log_api_call
 
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure production logging
+logger, request_logger = initialize_api_logging(
+    app,
+    log_level=os.getenv('LOG_LEVEL', 'INFO'),
+    slow_request_threshold_ms=int(os.getenv('SLOW_REQUEST_THRESHOLD_MS', '1000')),
+    log_request_body=True,
+    log_response_body=False,
+    exclude_paths=['/health', '/favicon.ico']
+)
 
 # Initialize database
 db = get_db()
@@ -34,12 +41,12 @@ db = get_db()
 DATA_PROVIDER = initialize_provider(
     environment=os.getenv('ENVIRONMENT', 'local')
 )
-logger.info(f"✅ Data Provider initialized: {DATA_PROVIDER.__class__.__name__}")
+logger.info(f"Data Provider initialized: {DATA_PROVIDER.__class__.__name__}")
 
 # Register Storyboard Blueprint
 from routes.storyboard_routes import storyboard_bp
 app.register_blueprint(storyboard_bp, url_prefix='/api/storyboard')
-logger.info("✅ Storyboard routes registered at /api/storyboard")
+logger.info("Storyboard routes registered at /api/storyboard")
 
 # Track server start time for uptime calculations
 SERVER_START_TIME = datetime.now()

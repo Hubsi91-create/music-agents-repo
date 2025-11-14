@@ -672,6 +672,481 @@ class DatabaseManager:
 
             return stats
 
+    # ============================================================
+    # STORYBOARD VIDEO OPERATIONS
+    # ============================================================
+
+    def save_video_task(
+        self,
+        task_id: str,
+        user_id: str,
+        project_name: str,
+        song_title: str,
+        music_file: str,
+        genre: str,
+        bpm: Optional[int] = None,
+        engine: str = 'runway_standard',
+        prompt: str = '',
+        status: str = 'pending',
+        youtube_title: Optional[str] = None,
+        youtube_description: Optional[str] = None,
+        youtube_tags: Optional[str] = None,
+        video_url: Optional[str] = None,
+        cost: Optional[float] = None,
+        credits_used: Optional[int] = None,
+        duration: Optional[int] = None
+    ) -> int:
+        """
+        Save a video task to database.
+
+        Args:
+            task_id: Unique task identifier
+            user_id: User identifier
+            project_name: Project name
+            song_title: Song title
+            music_file: Path/URL to music file
+            genre: Music genre
+            bpm: Beats per minute (optional)
+            engine: Video generation engine
+            prompt: Generation prompt
+            status: Task status (pending, processing, completed, failed)
+            youtube_title: YouTube optimized title
+            youtube_description: YouTube description
+            youtube_tags: YouTube tags (JSON array)
+            video_url: Generated video URL
+            cost: Generation cost
+            credits_used: Credits consumed
+            duration: Video duration in seconds
+
+        Returns:
+            int: Number of rows inserted (1 on success)
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT OR REPLACE INTO storyboard_videos
+                (id, user_id, project_name, song_title, music_file, genre, bpm,
+                 engine, prompt, status, youtube_title, youtube_description,
+                 youtube_tags, video_url, cost, credits_used, duration, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            """, (
+                task_id, user_id, project_name, song_title, music_file, genre, bpm,
+                engine, prompt, status, youtube_title, youtube_description,
+                youtube_tags, video_url, cost, credits_used, duration
+            ))
+
+            self.logger.info(f"Saved video task: {task_id} for user: {user_id}")
+            return cursor.rowcount
+
+    def get_video_task(self, task_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get a single video task by ID.
+
+        Args:
+            task_id: Task identifier
+
+        Returns:
+            Video task dictionary or None if not found
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT * FROM storyboard_videos
+                WHERE id = ?
+            """, (task_id,))
+
+            row = cursor.fetchone()
+            if row:
+                task = dict(row)
+                # Parse JSON fields
+                if task.get('youtube_tags'):
+                    try:
+                        task['youtube_tags'] = json.loads(task['youtube_tags'])
+                    except json.JSONDecodeError:
+                        task['youtube_tags'] = []
+                return task
+            return None
+
+    def get_video_tasks(
+        self,
+        user_id: Optional[str] = None,
+        status: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0
+    ) -> List[Dict[str, Any]]:
+        """
+        Get video tasks with optional filtering.
+
+        Args:
+            user_id: Filter by user (None = all users)
+            status: Filter by status (None = all statuses)
+            limit: Maximum number of results
+            offset: Number of results to skip
+
+        Returns:
+            List of video tasks
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+
+            query = "SELECT * FROM storyboard_videos WHERE 1=1"
+            params = []
+
+            if user_id:
+                query += " AND user_id = ?"
+                params.append(user_id)
+
+            if status:
+                query += " AND status = ?"
+                params.append(status)
+
+            query += " ORDER BY created_at DESC LIMIT ? OFFSET ?"
+            params.extend([limit, offset])
+
+            cursor.execute(query, params)
+
+            rows = cursor.fetchall()
+            tasks = []
+
+            for row in rows:
+                task = dict(row)
+                # Parse JSON fields
+                if task.get('youtube_tags'):
+                    try:
+                        task['youtube_tags'] = json.loads(task['youtube_tags'])
+                    except json.JSONDecodeError:
+                        task['youtube_tags'] = []
+                tasks.append(task)
+
+            return tasks
+
+    def update_video_task_status(
+        self,
+        task_id: str,
+        status: str,
+        video_url: Optional[str] = None,
+        error_message: Optional[str] = None,
+        completed_at: Optional[str] = None
+    ) -> int:
+        """
+        Update video task status.
+
+        Args:
+            task_id: Task identifier
+            status: New status
+            video_url: Video URL (optional)
+            error_message: Error message if failed
+            completed_at: Completion timestamp (ISO format)
+
+        Returns:
+            Number of rows updated
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+
+            # Build dynamic update query
+            updates = ["status = ?"]
+            params = [status]
+
+            if video_url:
+                updates.append("video_url = ?")
+                params.append(video_url)
+
+            if error_message:
+                updates.append("error_message = ?")
+                params.append(error_message)
+
+            if completed_at:
+                updates.append("completed_at = ?")
+                params.append(completed_at)
+
+            params.append(task_id)
+
+            query = f"""
+                UPDATE storyboard_videos
+                SET {', '.join(updates)}
+                WHERE id = ?
+            """
+
+            cursor.execute(query, params)
+
+            self.logger.info(f"Updated video task {task_id} to status: {status}")
+            return cursor.rowcount
+
+    def update_video_task(
+        self,
+        task_id: str,
+        **kwargs
+    ) -> int:
+        """
+        Update video task with arbitrary fields.
+
+        Args:
+            task_id: Task identifier
+            **kwargs: Fields to update (status, video_url, cost, etc.)
+
+        Returns:
+            Number of rows updated
+        """
+        if not kwargs:
+            return 0
+
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+
+            # Build dynamic update query
+            updates = []
+            params = []
+
+            allowed_fields = {
+                'status', 'video_url', 'youtube_title', 'youtube_description',
+                'youtube_tags', 'cost', 'credits_used', 'duration',
+                'error_message', 'completed_at', 'prompt', 'engine'
+            }
+
+            for key, value in kwargs.items():
+                if key in allowed_fields:
+                    updates.append(f"{key} = ?")
+                    params.append(value)
+
+            if not updates:
+                return 0
+
+            params.append(task_id)
+
+            query = f"""
+                UPDATE storyboard_videos
+                SET {', '.join(updates)}
+                WHERE id = ?
+            """
+
+            cursor.execute(query, params)
+
+            self.logger.info(f"Updated video task {task_id} with {len(updates)} fields")
+            return cursor.rowcount
+
+    def delete_video_task(self, task_id: str) -> int:
+        """
+        Delete a video task and its associated thumbnails.
+
+        Args:
+            task_id: Task identifier
+
+        Returns:
+            Number of rows deleted
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+
+            # Delete thumbnails first (foreign key constraint)
+            cursor.execute("""
+                DELETE FROM storyboard_thumbnails
+                WHERE video_id = ?
+            """, (task_id,))
+
+            # Delete video task
+            cursor.execute("""
+                DELETE FROM storyboard_videos
+                WHERE id = ?
+            """, (task_id,))
+
+            self.logger.info(f"Deleted video task: {task_id}")
+            return cursor.rowcount
+
+    # ============================================================
+    # STORYBOARD THUMBNAILS OPERATIONS
+    # ============================================================
+
+    def save_thumbnail(
+        self,
+        thumbnail_id: str,
+        video_id: str,
+        variant: str,
+        image_url: str,
+        click_prediction: Optional[float] = None,
+        is_selected: bool = False
+    ) -> int:
+        """
+        Save a thumbnail variant.
+
+        Args:
+            thumbnail_id: Unique thumbnail identifier
+            video_id: Associated video task ID
+            variant: Variant type (bold_text, emotional_face, etc.)
+            image_url: Thumbnail image URL
+            click_prediction: Predicted click-through rate (0-1)
+            is_selected: Whether this thumbnail is selected
+
+        Returns:
+            Number of rows inserted
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT OR REPLACE INTO storyboard_thumbnails
+                (id, video_id, variant, image_url, click_prediction, is_selected, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            """, (thumbnail_id, video_id, variant, image_url, click_prediction, is_selected))
+
+            self.logger.info(f"Saved thumbnail: {thumbnail_id} for video: {video_id}")
+            return cursor.rowcount
+
+    def get_thumbnails(
+        self,
+        video_id: str
+    ) -> List[Dict[str, Any]]:
+        """
+        Get all thumbnails for a video.
+
+        Args:
+            video_id: Video task identifier
+
+        Returns:
+            List of thumbnail dictionaries
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT * FROM storyboard_thumbnails
+                WHERE video_id = ?
+                ORDER BY click_prediction DESC, created_at DESC
+            """, (video_id,))
+
+            rows = cursor.fetchall()
+            return [dict(row) for row in rows]
+
+    def update_thumbnail_selection(
+        self,
+        video_id: str,
+        selected_thumbnail_id: str
+    ) -> int:
+        """
+        Update thumbnail selection for a video.
+
+        Marks one thumbnail as selected and all others as not selected.
+
+        Args:
+            video_id: Video task identifier
+            selected_thumbnail_id: Thumbnail to mark as selected
+
+        Returns:
+            Number of rows updated
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+
+            # Deselect all thumbnails for this video
+            cursor.execute("""
+                UPDATE storyboard_thumbnails
+                SET is_selected = 0
+                WHERE video_id = ?
+            """, (video_id,))
+
+            # Select the specified thumbnail
+            cursor.execute("""
+                UPDATE storyboard_thumbnails
+                SET is_selected = 1
+                WHERE id = ? AND video_id = ?
+            """, (selected_thumbnail_id, video_id))
+
+            self.logger.info(f"Updated thumbnail selection for video {video_id}: {selected_thumbnail_id}")
+            return cursor.rowcount
+
+    def get_selected_thumbnail(
+        self,
+        video_id: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get the selected thumbnail for a video.
+
+        Args:
+            video_id: Video task identifier
+
+        Returns:
+            Selected thumbnail or None
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT * FROM storyboard_thumbnails
+                WHERE video_id = ? AND is_selected = 1
+                LIMIT 1
+            """, (video_id,))
+
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    # ============================================================
+    # STORYBOARD STATISTICS
+    # ============================================================
+
+    def get_storyboard_stats(
+        self,
+        user_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Get storyboard statistics.
+
+        Args:
+            user_id: Filter by user (None = all users)
+
+        Returns:
+            Statistics dictionary
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+
+            stats = {}
+
+            # Video tasks count
+            query = "SELECT COUNT(*) FROM storyboard_videos"
+            params = []
+
+            if user_id:
+                query += " WHERE user_id = ?"
+                params.append(user_id)
+
+            cursor.execute(query, params)
+            stats['total_tasks'] = cursor.fetchone()[0]
+
+            # Tasks by status
+            query = "SELECT status, COUNT(*) FROM storyboard_videos"
+            if user_id:
+                query += " WHERE user_id = ?"
+
+            query += " GROUP BY status"
+
+            cursor.execute(query, params)
+            stats['by_status'] = {row[0]: row[1] for row in cursor.fetchall()}
+
+            # Total cost
+            query = "SELECT SUM(cost) FROM storyboard_videos WHERE cost IS NOT NULL"
+            if user_id:
+                query += " AND user_id = ?"
+
+            cursor.execute(query, params)
+            total_cost = cursor.fetchone()[0]
+            stats['total_cost'] = total_cost if total_cost else 0.0
+
+            # Total credits used
+            query = "SELECT SUM(credits_used) FROM storyboard_videos WHERE credits_used IS NOT NULL"
+            if user_id:
+                query += " AND user_id = ?"
+
+            cursor.execute(query, params)
+            total_credits = cursor.fetchone()[0]
+            stats['total_credits_used'] = total_credits if total_credits else 0
+
+            # Thumbnails count
+            query = "SELECT COUNT(*) FROM storyboard_thumbnails"
+            if user_id:
+                query += " WHERE video_id IN (SELECT id FROM storyboard_videos WHERE user_id = ?)"
+
+            cursor.execute(query, params)
+            stats['total_thumbnails'] = cursor.fetchone()[0]
+
+            return stats
+
 
 # ============================================================
 # GLOBAL DATABASE INSTANCE
