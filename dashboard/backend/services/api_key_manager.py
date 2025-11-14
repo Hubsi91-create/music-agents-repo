@@ -24,8 +24,7 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
-from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 from database import get_db
 
@@ -73,13 +72,12 @@ class APIKeyManager:
         Returns:
             Fernet cipher instance
         """
-        # Derive a proper encryption key using PBKDF2
-        kdf = PBKDF2(
+        # Derive a proper encryption key using PBKDF2HMAC
+        kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=b'music-agents-salt',  # In production, use random salt stored in DB
-            iterations=100000,
-            backend=default_backend()
+            iterations=100000
         )
 
         key = base64.urlsafe_b64encode(kdf.derive(key_source.encode()))
