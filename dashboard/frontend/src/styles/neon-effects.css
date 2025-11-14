@@ -1,0 +1,241 @@
+/* Neon Glow Animations */
+
+@keyframes glow-cyan {
+  0%,
+  100% {
+    box-shadow: 0 0 10px #00f0ff, 0 0 20px rgba(0, 240, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px #00f0ff, 0 0 40px rgba(0, 240, 255, 0.7),
+      0 0 60px rgba(0, 240, 255, 0.4);
+  }
+}
+
+@keyframes glow-red {
+  0%,
+  100% {
+    box-shadow: 0 0 10px #ff1744, 0 0 20px rgba(255, 23, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px #ff1744, 0 0 40px rgba(255, 23, 68, 0.7),
+      0 0 60px rgba(255, 23, 68, 0.4);
+  }
+}
+
+@keyframes glow-purple {
+  0%,
+  100% {
+    box-shadow: 0 0 10px #b24bf3, 0 0 20px rgba(178, 75, 243, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px #b24bf3, 0 0 40px rgba(178, 75, 243, 0.7),
+      0 0 60px rgba(178, 75, 243, 0.4);
+  }
+}
+
+@keyframes glow-green {
+  0%,
+  100% {
+    box-shadow: 0 0 10px #00e676, 0 0 20px rgba(0, 230, 118, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px #00e676, 0 0 40px rgba(0, 230, 118, 0.7),
+      0 0 60px rgba(0, 230, 118, 0.4);
+  }
+}
+
+@keyframes glow-yellow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px #ffeb3b, 0 0 20px rgba(255, 235, 59, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px #ffeb3b, 0 0 40px rgba(255, 235, 59, 0.7),
+      0 0 60px rgba(255, 235, 59, 0.4);
+  }
+}
+
+/* Spin Animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-red {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fade Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale Animations */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Progress Bar Animation */
+@keyframes progress-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Neon Classes */
+.neon-glow-cyan {
+  animation: glow-cyan 2s ease-in-out infinite;
+}
+
+.neon-glow-red {
+  animation: glow-red 2s ease-in-out infinite;
+}
+
+.neon-glow-purple {
+  animation: glow-purple 2s ease-in-out infinite;
+}
+
+.neon-glow-green {
+  animation: glow-green 2s ease-in-out infinite;
+}
+
+.neon-glow-yellow {
+  animation: glow-yellow 2s ease-in-out infinite;
+}
+
+/* Border Glow */
+.border-glow-cyan {
+  border: 2px solid rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+.border-glow-cyan:hover {
+  border-color: rgba(0, 240, 255, 0.8);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.border-glow-red {
+  border: 2px solid rgba(255, 23, 68, 0.5);
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.3), inset 0 0 10px rgba(255, 23, 68, 0.1);
+}
+
+.border-glow-red:hover {
+  border-color: rgba(255, 23, 68, 0.8);
+  box-shadow: 0 0 20px rgba(255, 23, 68, 0.5), inset 0 0 20px rgba(255, 23, 68, 0.2);
+}
+
+/* Text Glow */
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.5),
+    0 0 30px rgba(0, 240, 255, 0.3);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 10px rgba(255, 23, 68, 0.8), 0 0 20px rgba(255, 23, 68, 0.5),
+    0 0 30px rgba(255, 23, 68, 0.3);
+}
+
+/* Loading Spinner */
+.spinner {
+  border: 3px solid rgba(0, 240, 255, 0.1);
+  border-top: 3px solid #00f0ff;
+  border-radius: 50%;
+  animation: spin-slow 1s linear infinite;
+}
+
+/* Pulse Effect */
+.pulse-cyan {
+  animation: glow-cyan 2s ease-in-out infinite;
+}
+
+.pulse-red {
+  animation: glow-red 2s ease-in-out infinite;
+}
