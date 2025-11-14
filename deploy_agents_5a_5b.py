@@ -15,6 +15,15 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+# Load .env file if it exists
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("✅ .env file loaded")
+except ImportError:
+    print("⚠️  python-dotenv not installed - using environment variables only")
+    print("   Install with: pip install python-dotenv")
+
 # === CONFIGURATION ===
 STYLE_ANCHORS_DIR = Path("style_anchors")
 OUTPUT_DIR = STYLE_ANCHORS_DIR / "production_test"
