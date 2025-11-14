@@ -18,6 +18,16 @@ except ImportError:
     PROMPT_HARVESTING_AVAILABLE = False
     logging.warning("Prompt harvesting modules not available")
 
+# Import holistic training modules
+try:
+    from training.holistic_trainer import HolisticTrainer
+    from training.training_monitor import TrainingMonitor
+    from training.agent_trainer import AgentTrainer
+    HOLISTIC_TRAINING_AVAILABLE = True
+except ImportError:
+    HOLISTIC_TRAINING_AVAILABLE = False
+    logging.warning("Holistic training modules not available")
+
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -312,31 +322,196 @@ def enhanced_training_pipeline(iterations: int = 100, min_score: float = 7.0):
     return report
 
 
+def run_holistic_training(verbose: bool = True):
+    """
+    Execute complete holistic training pipeline.
+
+    Trains ALL agents (1-11) using data from Agent 12 (Universal Harvester).
+    Implements 6-phase workflow:
+    1. Data Harvesting
+    2. Data Validation
+    3. Sequential Agent Training
+    4. Production Run (optional)
+    5. Monitoring & Reporting
+    6. Cleanup & Archiving
+
+    Args:
+        verbose: Print detailed progress information
+
+    Returns:
+        Dict with training results and metrics
+    """
+    if not HOLISTIC_TRAINING_AVAILABLE:
+        logger.error("[Holistic Training] Training modules not available")
+        return {
+            'status': 'error',
+            'message': 'Holistic training modules not installed'
+        }
+
+    logger.info("="*60)
+    logger.info("HOLISTIC TRAINING PIPELINE - INITIALIZING")
+    logger.info("="*60)
+
+    # Initialize mock agents (in production, these would be actual agent instances)
+    agents = {
+        'agent_1': None,  # TrendDetective
+        'agent_2': None,  # AudioCurator
+        'agent_3': None,  # VideoConceptCollaborator
+        'agent_4': None,  # ScreenplayGenerator
+        'agent_5a': None,  # VeoAdapter
+        'agent_5b': None,  # RunwayAdapter
+        'agent_6': None,  # InfluencerMatcher
+        'agent_7': None,  # DistributionMetadata
+        'agent_8': None,  # PromptRefiner
+        'agent_9': None,  # SoundDesigner
+        'agent_10': None,  # MasterDistributor
+        'agent_11': None,  # MetaTrainer
+    }
+
+    # Initialize trainer
+    try:
+        trainer = HolisticTrainer(agents)
+
+        # Run training pipeline
+        result = trainer.run_holistic_training(verbose=verbose)
+
+        # Save result
+        result_path = 'orchestrator/holistic_training_result.json'
+        with open(result_path, 'w', encoding='utf-8') as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+
+        logger.info(f"[Result] Saved to: {result_path}")
+
+        return result
+
+    except Exception as e:
+        logger.error(f"[Holistic Training] Failed: {str(e)}", exc_info=True)
+        return {
+            'status': 'error',
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }
+
+
+def get_training_stats():
+    """
+    Get training statistics and system health.
+
+    Returns:
+        Dict with system health and training metrics
+    """
+    if not HOLISTIC_TRAINING_AVAILABLE:
+        return {
+            'status': 'unavailable',
+            'message': 'Holistic training modules not installed'
+        }
+
+    try:
+        monitor = TrainingMonitor()
+        health = monitor.get_system_health()
+
+        logger.info("[Training Stats] Retrieved system health")
+
+        return {
+            'status': 'success',
+            'health': health,
+            'timestamp': datetime.now().isoformat()
+        }
+
+    except Exception as e:
+        logger.error(f"[Training Stats] Failed: {str(e)}")
+        return {
+            'status': 'error',
+            'error': str(e)
+        }
+
+
 def main():
-    if len(sys.argv) < 3:
-        print("[Orchestrator] 7-Agent Music Production System")
-        print("Usage: python orchestrator.py <genre> <mood>")
+    if len(sys.argv) < 2:
+        print("[Orchestrator] Music Production System - 7 Agents + Holistic Training")
+        print("\nUsage:")
+        print("  python orchestrator.py <genre> <mood>             - Generate orchestration report")
+        print("  python orchestrator.py train                      - Run holistic training")
+        print("  python orchestrator.py train --verbose            - Run training with detailed output")
+        print("  python orchestrator.py stats                      - Get training statistics")
+        print("  python orchestrator.py enhanced-train [iterations] - Run enhanced training pipeline")
         sys.exit(1)
     
+    command = sys.argv[1]
+
     try:
-        music_genre = sys.argv[1]
-        mood = sys.argv[2]
-        
-        print(f"[Orchestrator] Starting 7-Agent Orchestration...")
-        print(f"[Orchestrator] Genre: {music_genre}, Mood: {mood}")
-        
-        orchestration = generate_orchestration_report(music_genre, mood)
-        
-        with open('orchestration_report.json', 'w', encoding='utf-8') as f:
-            json.dump(orchestration, f, indent=2, ensure_ascii=False)
-        
-        print(f"[SUCCESS] 🎉 7-Agent System Orchestrated!")
-        print(f"[SUCCESS] All 7 Agents Coordinated & Ready!")
-        print(f"[SAVED] Orchestration Report: orchestration_report.json")
-        print(f"\n[STATUS] MUSIC PRODUCTION SYSTEM: PRODUCTION-READY ✅")
-        
+        # Handle holistic training
+        if command == 'train':
+            verbose = '--verbose' in sys.argv
+            result = run_holistic_training(verbose=verbose)
+
+            if result['status'] == 'success':
+                print(f"\n[SUCCESS] ✅ Holistic Training Completed!")
+                print(f"[SUCCESS] Duration: {result.get('total_time_minutes', 0):.2f} minutes")
+                print(f"[SUCCESS] Agents Trained: {result.get('agents_trained', 0)}")
+                print(f"[SUCCESS] System Improvement: {result.get('system_quality_delta', 0):+.2f}%")
+            else:
+                print(f"\n[ERROR] Training Failed: {result.get('error', 'Unknown error')}")
+                sys.exit(1)
+
+        # Handle training statistics
+        elif command == 'stats':
+            stats = get_training_stats()
+
+            if stats['status'] == 'success':
+                health = stats['health']
+                print(f"\n[Training Statistics]")
+                print(f"  Overall Quality: {health.get('overall_quality', 0):.1f}/10")
+                print(f"  Trend: {health.get('trend', 'unknown').upper()}")
+                print(f"  Improvement: {health.get('improvement_percent', 0):+.1f}%")
+                print(f"  Agents Online: {health.get('agents_online', 0)}")
+                print(f"  Agents Needing Attention: {len(health.get('agents_needing_attention', []))}")
+                print(f"  Next Training: {health.get('next_training', 'unknown')}")
+            else:
+                print(f"\n[ERROR] Stats Failed: {stats.get('error', 'Unknown error')}")
+
+        # Handle enhanced training (existing)
+        elif command == 'enhanced-train':
+            iterations = int(sys.argv[2]) if len(sys.argv) > 2 else 100
+            min_score = float(sys.argv[3]) if len(sys.argv) > 3 else 7.0
+
+            result = enhanced_training_pipeline(iterations=iterations, min_score=min_score)
+
+            if result['status'] == 'success':
+                print(f"\n[SUCCESS] ✅ Enhanced Training Completed!")
+                print(f"[SUCCESS] Harvested: {result['harvesting']['total_harvested']} prompts")
+                print(f"[SUCCESS] Trained with: {result['training']['prompts_selected']} top prompts")
+            else:
+                print(f"\n[ERROR] Enhanced Training Failed")
+                sys.exit(1)
+
+        # Handle orchestration (existing)
+        else:
+            if len(sys.argv) < 3:
+                print("[ERROR] Orchestration requires genre and mood")
+                print("Usage: python orchestrator.py <genre> <mood>")
+                sys.exit(1)
+
+            music_genre = sys.argv[1]
+            mood = sys.argv[2]
+
+            print(f"[Orchestrator] Starting 7-Agent Orchestration...")
+            print(f"[Orchestrator] Genre: {music_genre}, Mood: {mood}")
+
+            orchestration = generate_orchestration_report(music_genre, mood)
+
+            with open('orchestration_report.json', 'w', encoding='utf-8') as f:
+                json.dump(orchestration, f, indent=2, ensure_ascii=False)
+
+            print(f"[SUCCESS] 🎉 7-Agent System Orchestrated!")
+            print(f"[SUCCESS] All 7 Agents Coordinated & Ready!")
+            print(f"[SAVED] Orchestration Report: orchestration_report.json")
+            print(f"\n[STATUS] MUSIC PRODUCTION SYSTEM: PRODUCTION-READY ✅")
+
     except Exception as e:
         print(f"[ERROR] {str(e)}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 if __name__ == '__main__':

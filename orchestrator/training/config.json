@@ -1,0 +1,152 @@
+{
+  "training": {
+    "enabled": true,
+    "schedule": "0 3 * * *",
+    "description": "Daily training at 3 AM",
+    "timeout_per_agent_seconds": 300,
+    "timeout_total_seconds": 1800,
+
+    "agent_training": {
+      "agent_1": {
+        "enabled": true,
+        "priority": "high",
+        "description": "Trend Detective - Identifies viral trends"
+      },
+      "agent_2": {
+        "enabled": true,
+        "priority": "high",
+        "description": "Audio Curator - Selects optimal audio tracks"
+      },
+      "agent_3": {
+        "enabled": true,
+        "priority": "medium",
+        "description": "Video Concept - Generates creative concepts"
+      },
+      "agent_4": {
+        "enabled": true,
+        "priority": "high",
+        "description": "Screenplay Generator - Creates narratives"
+      },
+      "agent_5a": {
+        "enabled": true,
+        "priority": "critical",
+        "description": "Veo Generator - Google Veo video generation"
+      },
+      "agent_5b": {
+        "enabled": true,
+        "priority": "critical",
+        "description": "Runway Generator - RunwayML video generation"
+      },
+      "agent_6": {
+        "enabled": true,
+        "priority": "medium",
+        "description": "Influencer Matcher - Finds collaboration partners"
+      },
+      "agent_7": {
+        "enabled": true,
+        "priority": "low",
+        "description": "Distribution Metadata - Generates SEO/metadata"
+      },
+      "agent_8": {
+        "enabled": true,
+        "priority": "critical",
+        "description": "Prompt Refiner - Optimizes prompts for quality"
+      },
+      "agent_9": {
+        "enabled": true,
+        "priority": "medium",
+        "description": "Sound Designer - Creates audio mixing strategies"
+      },
+      "agent_10": {
+        "enabled": true,
+        "priority": "high",
+        "description": "Master Distributor - Handles multi-platform distribution"
+      },
+      "agent_11": {
+        "enabled": true,
+        "priority": "high",
+        "description": "Meta Trainer - Trains the training system itself"
+      }
+    },
+
+    "harvester": {
+      "data_quality_threshold": 6.5,
+      "min_records_per_type": 20,
+      "deduplicate": true,
+      "sort_by": "quality_score",
+      "description": "Agent 12 (Universal Harvester) configuration"
+    },
+
+    "monitoring": {
+      "track_metrics": true,
+      "generate_reports": true,
+      "save_logs": true,
+      "log_retention_days": 30,
+      "description": "Training monitoring and reporting settings"
+    },
+
+    "production_run": {
+      "enabled": false,
+      "generate_videos": false,
+      "agents_sequence": [
+        "agent_1",
+        "agent_3",
+        "agent_4",
+        "agent_2",
+        "agent_9",
+        "agent_8",
+        "agent_5a",
+        "agent_5b",
+        "agent_6",
+        "agent_10",
+        "agent_7"
+      ],
+      "description": "Production pipeline after training (set enabled=true to activate)"
+    },
+
+    "quality_targets": {
+      "overall_system": 8.5,
+      "agent_1_trend_accuracy": 8.0,
+      "agent_2_audio_quality": 8.5,
+      "agent_3_concept_creativity": 8.0,
+      "agent_4_screenplay_quality": 8.5,
+      "agent_5a_veo_output_quality": 9.0,
+      "agent_5b_runway_output_quality": 9.0,
+      "agent_6_match_accuracy": 7.5,
+      "agent_7_metadata_quality": 7.0,
+      "agent_8_prompt_quality": 9.5,
+      "agent_9_sound_quality": 8.0,
+      "agent_10_distribution_reach": 8.5,
+      "agent_11_training_effectiveness": 8.0,
+      "description": "Target quality scores for each agent (0-10 scale)"
+    },
+
+    "training_data_limits": {
+      "trend": 50,
+      "audio": 100,
+      "screenplay": 75,
+      "creator": 50,
+      "distribution": 100,
+      "sound": 75,
+      "prompt": 200,
+      "description": "Maximum number of training records per type"
+    },
+
+    "performance": {
+      "parallel_training": false,
+      "cache_training_data": true,
+      "use_gpu": false,
+      "batch_size": 32,
+      "description": "Performance optimization settings"
+    },
+
+    "notifications": {
+      "enabled": false,
+      "email": "",
+      "slack_webhook": "",
+      "notify_on_failure": true,
+      "notify_on_success": false,
+      "description": "Notification settings for training events"
+    }
+  }
+}
