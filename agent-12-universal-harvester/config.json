@@ -1,0 +1,83 @@
+{
+  "harvesters": {
+    "trend": {
+      "enabled": true,
+      "schedule": "daily",
+      "sources": ["youtube", "reddit", "tiktok", "twitter"],
+      "quality_threshold": 7.0,
+      "description": "Harvests trending music/video data for Agent 1 TrendDetective"
+    },
+    "audio": {
+      "enabled": true,
+      "schedule": "daily",
+      "sources": ["spotify", "youtube_music", "reddit", "soundcloud"],
+      "quality_threshold": 7.0,
+      "description": "Harvests audio quality data for Agent 2 AudioCurator"
+    },
+    "screenplay": {
+      "enabled": true,
+      "schedule": "weekly",
+      "sources": ["reddit", "github", "wattpad", "youtube"],
+      "quality_threshold": 6.5,
+      "description": "Harvests story patterns for Agent 4 ScreenplayGenerator"
+    },
+    "creator": {
+      "enabled": true,
+      "schedule": "weekly",
+      "sources": ["youtube", "tiktok", "instagram", "reddit"],
+      "quality_threshold": 7.0,
+      "description": "Harvests creator data for Agent 6 InfluencerMatcher"
+    },
+    "distribution": {
+      "enabled": true,
+      "schedule": "daily",
+      "sources": ["youtube_analytics", "tiktok", "twitter", "reddit"],
+      "quality_threshold": 7.5,
+      "description": "Harvests distribution tactics for Agent 10 MasterDistributor"
+    },
+    "sound": {
+      "enabled": true,
+      "schedule": "weekly",
+      "sources": ["reddit", "beatport", "youtube"],
+      "quality_threshold": 6.5,
+      "description": "Harvests sound design techniques for Agent 9 SoundDesigner"
+    }
+  },
+  "gemini": {
+    "model": "gemini-2.0-flash-exp",
+    "temperature": 0.7,
+    "max_output_tokens": 2000,
+    "description": "Google Gemini AI configuration for data analysis"
+  },
+  "database": {
+    "path": "./database/harvested_data.db",
+    "cleanup_after_days": 30,
+    "backup_enabled": true,
+    "description": "SQLite database configuration"
+  },
+  "api_rate_limits": {
+    "youtube": {
+      "requests_per_day": 10000,
+      "requests_per_minute": 100
+    },
+    "reddit": {
+      "requests_per_minute": 60
+    },
+    "spotify": {
+      "requests_per_second": 10
+    },
+    "twitter": {
+      "requests_per_15min": 450
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "./logs/harvester.log",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 5003,
+    "debug": false
+  }
+}
