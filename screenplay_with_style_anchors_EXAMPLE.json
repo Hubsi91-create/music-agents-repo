@@ -1,0 +1,120 @@
+{
+  "timestamp": "2025-11-14T02:30:00.000000",
+  "music_title": "Dancing in the Heat",
+  "music_duration_seconds": 138.4,
+  "quality_score": 85,
+  "concept_type": "Premium High-Quality",
+  "screenplay": [
+    {
+      "scene_number": 1,
+      "duration_seconds": 10,
+      "concept_description": "Intro mit Logo Animation",
+      "screenplay_text": "[Scene 1] Urban warehouse at dawn, lead dancer enters through industrial door, golden morning light streaming through windows",
+      "visual_elements": [
+        "animation",
+        "cinematic_lighting"
+      ],
+      "mood": [
+        "cinematic",
+        "professional",
+        "premium"
+      ],
+      "location": "Urban warehouse",
+      "camera_angle": "Wide establishing shot",
+      "style_anchors": {
+        "character": {
+          "description": "Female lead dancer, athletic build, confident presence",
+          "outfit": "Black crop top, cargo pants, urban sneakers",
+          "expression": "Confident, focused"
+        },
+        "lighting": "Golden hour, soft natural light",
+        "colors": ["#FFA500", "#FFD700", "#FF8C00"],
+        "artistic_style": "cinematic-photorealistic",
+        "nanobanana_image": "style_anchors/ref_image_scene_001_nanobanana.png",
+        "runway_image": "style_anchors/ref_image_scene_001_runway.png",
+        "approval_status": "pending"
+      }
+    },
+    {
+      "scene_number": 2,
+      "duration_seconds": 30,
+      "concept_description": "Main Performance - Dance Sequence",
+      "screenplay_text": "[Scene 2] Dancer performs energetic choreography in center of warehouse, dramatic shadows from industrial windows, dynamic movement",
+      "visual_elements": [
+        "choreography",
+        "dynamic_camera",
+        "dramatic_lighting"
+      ],
+      "mood": [
+        "energetic",
+        "powerful",
+        "professional"
+      ],
+      "location": "Urban warehouse interior",
+      "camera_angle": "Medium shot, tracking dancer movement",
+      "style_anchors": {
+        "character": {
+          "description": "Same lead dancer, mid-performance",
+          "outfit": "Black crop top, cargo pants (same as scene 1)",
+          "expression": "Intense, passionate, in the moment"
+        },
+        "lighting": "Dramatic side lighting, high contrast",
+        "colors": ["#FF6B6B", "#4ECDC4", "#FFD93D"],
+        "artistic_style": "cinematic-dynamic",
+        "nanobanana_image": "style_anchors/ref_image_scene_002_nanobanana.png",
+        "runway_image": "style_anchors/ref_image_scene_002_runway.png",
+        "approval_status": "pending"
+      }
+    },
+    {
+      "scene_number": 3,
+      "duration_seconds": 20,
+      "concept_description": "Outro - Climax and Credits",
+      "screenplay_text": "[Scene 3] Dancer strikes final pose as camera slowly pulls back, warehouse fades to artistic credits overlay",
+      "visual_elements": [
+        "final_pose",
+        "camera_pull_back",
+        "credits_overlay"
+      ],
+      "mood": [
+        "triumphant",
+        "cinematic",
+        "professional"
+      ],
+      "location": "Urban warehouse - wide view",
+      "camera_angle": "Wide shot, slow dolly out",
+      "style_anchors": {
+        "character": {
+          "description": "Lead dancer, final pose",
+          "outfit": "Black crop top, cargo pants (consistent)",
+          "expression": "Powerful, satisfied, victorious"
+        },
+        "lighting": "Cinematic backlight, silhouette emphasis",
+        "colors": ["#FFA500", "#FF6B6B", "#4ECDC4"],
+        "artistic_style": "cinematic-artistic",
+        "nanobanana_image": "style_anchors/ref_image_scene_003_nanobanana.png",
+        "runway_image": "style_anchors/ref_image_scene_003_runway.png",
+        "approval_status": "pending"
+      }
+    }
+  ],
+  "style_guide": {
+    "overall_aesthetic": "Urban cinematic, high-energy dance performance",
+    "color_palette": ["#FFA500", "#FFD700", "#FF6B6B", "#4ECDC4", "#FFD93D"],
+    "character_consistency": {
+      "lead_performer": {
+        "name": "Not specified",
+        "constant_features": [
+          "Athletic build",
+          "Black crop top and cargo pants throughout",
+          "Urban sneakers",
+          "Confident body language"
+        ]
+      }
+    },
+    "location_consistency": {
+      "primary_location": "Urban warehouse with industrial windows",
+      "lighting_progression": "Dawn → Full daylight → Backlit sunset"
+    }
+  }
+}
