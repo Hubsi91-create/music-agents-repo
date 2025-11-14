@@ -2,17 +2,45 @@
 Agent 5a: Nanobanana (Gemini 2.5 Flash Image) Style Anchor Generator
 """
 
-from google.auth import default
 import requests
 import json
 from pathlib import Path
 
 class NanobananaImageGenerator:
-    def __init__(self):
-        self.credentials, self.project = default()
+    def __init__(self, mock_mode=None):
         self.model = "gemini-2.5-flash-image"
         self.output_dir = Path("style_anchors")
         self.output_dir.mkdir(exist_ok=True)
+
+        # Try to initialize Google Auth (optional)
+        self.credentials = None
+        self.project = None
+        self.mock_mode = mock_mode
+
+        if mock_mode is None:
+            # Auto-detect: try to import and initialize
+            try:
+                import google.auth
+                from google.auth import default
+                self.credentials, self.project = default()
+                self.mock_mode = False
+                print("✅ Google Auth initialized")
+            except (ImportError, ModuleNotFoundError):
+                print(f"⚠️  google-auth not installed, running in MOCK MODE")
+                self.mock_mode = True
+            except Exception as e:
+                print(f"⚠️  Google Auth not configured, running in MOCK MODE")
+                self.mock_mode = True
+        elif not mock_mode:
+            # Explicit real mode
+            try:
+                from google.auth import default
+                self.credentials, self.project = default()
+            except Exception as e:
+                raise RuntimeError(f"Failed to initialize Google Auth in real mode: {e}")
+        else:
+            # Explicit mock mode
+            print("🧪 Running in MOCK MODE (testing)")
 
     def generate_style_anchor(self, scene_data, style_anchors):
         """
@@ -23,7 +51,19 @@ class NanobananaImageGenerator:
         # Create prompt
         prompt = self._create_prompt(scene_data, style_anchors)
 
-        # API Call
+        # MOCK MODE: Return mock data without API call
+        if self.mock_mode:
+            print(f"🧪 MOCK MODE: Skipping actual API call")
+            return {
+                "scene_id": scene_data["id"],
+                "image_path": None,
+                "prompt": prompt,
+                "model": "nanobanana",
+                "status": "mock_success",
+                "note": "Mock mode - no actual image generated. Configure Google Auth for real generation."
+            }
+
+        # API Call (real mode)
         try:
             response = requests.post(
                 f"https://generativelanguage.googleapis.com/v1/models/{self.model}:generate",

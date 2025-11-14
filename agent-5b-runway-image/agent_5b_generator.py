@@ -12,11 +12,24 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class RunwayImageGenerator:
-    def __init__(self):
+    def __init__(self, mock_mode=None):
         self.api_key = os.getenv("RUNWAY_API_KEY")
         self.model = "gen-4-image"
         self.output_dir = Path("style_anchors")
         self.output_dir.mkdir(exist_ok=True)
+
+        # Auto-detect mock mode
+        if mock_mode is None:
+            if not self.api_key:
+                print(f"⚠️  RUNWAY_API_KEY not found, running in MOCK MODE")
+                self.mock_mode = True
+            else:
+                print(f"✅ Runway API key found")
+                self.mock_mode = False
+        else:
+            self.mock_mode = mock_mode
+            if mock_mode:
+                print("🧪 Running in MOCK MODE (testing)")
 
     def generate_style_anchor(self, scene_data, style_anchors):
         """
@@ -27,7 +40,19 @@ class RunwayImageGenerator:
         # Create prompt
         prompt = self._create_prompt(scene_data, style_anchors)
 
-        # API Call
+        # MOCK MODE: Return mock data without API call
+        if self.mock_mode:
+            print(f"🧪 MOCK MODE: Skipping actual API call")
+            return {
+                "scene_id": scene_data["id"],
+                "image_path": None,
+                "prompt": prompt,
+                "model": "runway-gen4",
+                "status": "mock_success",
+                "note": "Mock mode - no actual image generated. Set RUNWAY_API_KEY for real generation."
+            }
+
+        # API Call (real mode)
         try:
             response = requests.post(
                 "https://api.runwayml.com/v1/gen4/image",
