@@ -18,13 +18,16 @@ interface StoryboardViewProps {
 }
 
 export function StoryboardView({ onBack }: StoryboardViewProps = {}) {
-  const [activeNavItem, setActiveNavItem] = useState('home');
+  const [activeNavItem, setActiveNavItem] = useState('project1'); // Start mit erstem Projekt
   const [selectedEngine, setSelectedEngine] = useState('');
 
-  // API Data Fetching mit React Query
-  const { data: agentProgress, isLoading: isLoadingAgents, isError: isErrorAgents } = useAgentProgress({ refetchInterval: 5000 });
-  const { data: videoThumbnails, isLoading: isLoadingThumbnails, isError: isErrorThumbnails } = useVideoThumbnails();
-  const { data: audioTrack, isLoading: isLoadingAudio, isError: isErrorAudio } = useAudioTrack();
+  // Determine if activeNavItem is a project (starts with 'project')
+  const selectedProjectId = activeNavItem.startsWith('project') ? activeNavItem : 'project1';
+
+  // API Data Fetching mit React Query (mit projectId)
+  const { data: agentProgress, isLoading: isLoadingAgents, isError: isErrorAgents } = useAgentProgress(selectedProjectId, { refetchInterval: 5000 });
+  const { data: videoThumbnails, isLoading: isLoadingThumbnails, isError: isErrorThumbnails } = useVideoThumbnails(selectedProjectId);
+  const { data: audioTrack, isLoading: isLoadingAudio, isError: isErrorAudio } = useAudioTrack(selectedProjectId);
   const { data: enginesData, isLoading: isLoadingEngines, isError: isErrorEngines } = useEngines();
   const { data: navItems, isLoading: isLoadingNav, isError: isErrorNav } = useNavItems();
 
@@ -79,7 +82,7 @@ export function StoryboardView({ onBack }: StoryboardViewProps = {}) {
 
       <div className="storyboard-main">
         <WorkflowHeader
-          title="Music Video Workflow"
+          title={`Music Video Workflow - ${navItems?.find(item => item.id === selectedProjectId)?.label || 'Project'}`}
           engines={engines}
           selectedEngine={selectedEngine}
           onEngineChange={setSelectedEngine}

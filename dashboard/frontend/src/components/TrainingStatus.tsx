@@ -23,7 +23,23 @@ export const TrainingStatus: React.FC = () => {
       setLoading(true)
       setError(null)
       const result = await fetchData('/api/training/status')
-      setTraining(result)
+
+      // Defensive check: Ensure result exists and has valid structure
+      if (!result || typeof result !== 'object') {
+        console.warn('Invalid training status response:', result)
+        setTraining(null)
+        return
+      }
+
+      // Transform and validate training data with defaults
+      const validatedTraining: TrainingData = {
+        status: result.status || 'unknown',
+        iterations: result.iterations ?? 0,
+        last_run: result.last_run || null,
+        system_ready: result.system_ready ?? false
+      }
+
+      setTraining(validatedTraining)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load training status')
       console.error('Failed to load training status:', err)
@@ -51,7 +67,14 @@ export const TrainingStatus: React.FC = () => {
     )
   }
 
-  if (!training) return null
+  if (!training) {
+    return (
+      <div className="training">
+        <h2>Training Status</h2>
+        <p>No training data available</p>
+      </div>
+    )
+  }
 
   return (
     <div className="training">
@@ -59,13 +82,13 @@ export const TrainingStatus: React.FC = () => {
       <div className="stats-grid">
         <div className="stat-card">
           <h3>Status</h3>
-          <div className="stat-value">{training.status}</div>
+          <div className="stat-value">{training.status || 'Unknown'}</div>
           <div className="stat-label">Current State</div>
         </div>
 
         <div className="stat-card">
           <h3>Iterations</h3>
-          <div className="stat-value">{training.iterations}</div>
+          <div className="stat-value">{training.iterations ?? 0}</div>
           <div className="stat-label">Completed</div>
         </div>
 

@@ -141,14 +141,18 @@ export function useStoryboardHealth() {
 /**
  * Simuliert Agent Progress Daten
  * TODO: Durch echten API-Endpoint ersetzen, wenn Backend verfügbar
+ * @param projectId - The project ID to fetch progress for
+ * @param options - Query options including refetchInterval
  */
-export function useAgentProgress(options?: { refetchInterval?: number }) {
+export function useAgentProgress(projectId?: string, options?: { refetchInterval?: number }) {
   return useQuery({
-    queryKey: ['storyboard', 'agent-progress'],
+    queryKey: ['storyboard', 'agent-progress', projectId],
     queryFn: async () => {
-      // Temporär: Mock-Daten
-      // TODO: Durch echten API-Call ersetzen
-      return [
+      // Temporär: Mock-Daten (variiert basierend auf projectId)
+      // TODO: Durch echten API-Call ersetzen: `/projects/${projectId}/progress`
+
+      // Simuliere unterschiedliche Progress-Werte für verschiedene Projekte
+      const baseProgress = [
         { id: 1, name: 'FanFor Studio', progress: 100, color: '#3B82F6' },
         { id: 2, name: 'Audio Analysis', progress: 85, color: '#3B82F6' },
         { id: 3, name: 'Scene Generation', progress: 80, color: '#3B82F6' },
@@ -156,6 +160,21 @@ export function useAgentProgress(options?: { refetchInterval?: number }) {
         { id: 5, name: 'Sync & Timing', progress: 30, color: '#3B82F6' },
         { id: 6, name: 'Final Render', progress: 10, color: '#3B82F6' },
       ];
+
+      // Variiere Progress basierend auf projectId
+      if (projectId === 'project2') {
+        return baseProgress.map(agent => ({
+          ...agent,
+          progress: Math.min(100, agent.progress + 10)
+        }));
+      } else if (projectId === 'project3') {
+        return baseProgress.map(agent => ({
+          ...agent,
+          progress: Math.max(0, agent.progress - 20)
+        }));
+      }
+
+      return baseProgress;
     },
     refetchInterval: options?.refetchInterval || 5000, // Poll every 5 seconds
   });
@@ -164,14 +183,16 @@ export function useAgentProgress(options?: { refetchInterval?: number }) {
 /**
  * Simuliert Video Thumbnail Daten
  * TODO: Durch echten API-Endpoint ersetzen, wenn Backend verfügbar
+ * @param projectId - The project ID to fetch thumbnails for
  */
-export function useVideoThumbnails() {
+export function useVideoThumbnails(projectId?: string) {
   return useQuery({
-    queryKey: ['storyboard', 'video-thumbnails'],
+    queryKey: ['storyboard', 'video-thumbnails', projectId],
     queryFn: async () => {
-      // Temporär: Mock-Daten
-      // TODO: Durch echten API-Call ersetzen
-      return [
+      // Temporär: Mock-Daten (variiert basierend auf projectId)
+      // TODO: Durch echten API-Call ersetzen: `/projects/${projectId}/thumbnails`
+
+      const baseThumbnails = [
         { id: 1, duration: '1:0', status: 'rendering', gradientColors: ['#667eea', '#764ba2'] },
         { id: 2, duration: '0:8', status: 'rendering', gradientColors: ['#f093fb', '#f5576c'] },
         { id: 3, duration: '1:0', status: 'rendering', gradientColors: ['#4facfe', '#00f2fe'] },
@@ -179,6 +200,15 @@ export function useVideoThumbnails() {
         { id: 5, duration: '1:0', status: 'rendering', gradientColors: ['#fa709a', '#fee140'] },
         { id: 6, duration: '0:8', status: 'rendering', gradientColors: ['#30cfd0', '#330867'] },
       ];
+
+      // Variiere Thumbnails basierend auf projectId
+      if (projectId === 'project2') {
+        return baseThumbnails.slice(0, 4); // Weniger Thumbnails für Project 2
+      } else if (projectId === 'project3') {
+        return baseThumbnails.slice(0, 3); // Noch weniger für Project 3
+      }
+
+      return baseThumbnails;
     },
   });
 }
@@ -186,20 +216,40 @@ export function useVideoThumbnails() {
 /**
  * Simuliert Audio Track Daten
  * TODO: Durch echten API-Endpoint ersetzen, wenn Backend verfügbar
+ * @param projectId - The project ID to fetch audio track for
  */
-export function useAudioTrack() {
+export function useAudioTrack(projectId?: string) {
   return useQuery({
-    queryKey: ['storyboard', 'audio-track'],
+    queryKey: ['storyboard', 'audio-track', projectId],
     queryFn: async () => {
-      // Temporär: Mock-Daten
-      // TODO: Durch echten API-Call ersetzen
-      return {
-        title: 'Siwal Syanjolisity',
-        artist: 'CosmoSonic',
-        duration: 240,
-        currentTime: 45,
-        isPlaying: false,
+      // Temporär: Mock-Daten (variiert basierend auf projectId)
+      // TODO: Durch echten API-Call ersetzen: `/projects/${projectId}/audio`
+
+      const audioTracks: Record<string, any> = {
+        project1: {
+          title: 'Midnight Serenade',
+          artist: 'CosmoSonic',
+          duration: 240,
+          currentTime: 45,
+          isPlaying: false,
+        },
+        project2: {
+          title: 'Electric Dreams',
+          artist: 'Neon Pulse',
+          duration: 195,
+          currentTime: 30,
+          isPlaying: false,
+        },
+        project3: {
+          title: 'Selene Gtulls',
+          artist: 'Lunar Waves',
+          duration: 270,
+          currentTime: 60,
+          isPlaying: false,
+        },
       };
+
+      return audioTracks[projectId || 'project1'] || audioTracks.project1;
     },
   });
 }

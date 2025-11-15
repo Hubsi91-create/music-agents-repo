@@ -7,8 +7,10 @@ interface SidebarProps {
 }
 
 export function Sidebar({ navItems, activeItem, onItemClick }: SidebarProps) {
-  const sections = navItems.filter(item => item.type === 'section');
-  const projects = navItems.filter(item => item.type === 'project');
+  // Defensive: Handle undefined navItems array
+  const validNavItems = navItems ?? [];
+  const sections = validNavItems.filter(item => item?.type === 'section');
+  const projects = validNavItems.filter(item => item?.type === 'project');
 
   return (
     <aside className="storyboard-sidebar">
@@ -18,14 +20,14 @@ export function Sidebar({ navItems, activeItem, onItemClick }: SidebarProps) {
 
       <nav className="sidebar-nav">
         <div className="nav-section">
-          {sections.map(item => (
+          {sections.map((item, index) => (
             <button
-              key={item.id}
-              className={`nav-item ${activeItem === item.id ? 'active' : ''}`}
-              onClick={() => onItemClick(item.id)}
+              key={item?.id ?? `section-${index}`}
+              className={`nav-item ${activeItem === item?.id ? 'active' : ''}`}
+              onClick={() => onItemClick(item?.id ?? '')}
             >
-              <span className="nav-icon">{item.icon}</span>
-              <span className="nav-label">{item.label}</span>
+              <span className="nav-icon">{item?.icon ?? '📁'}</span>
+              <span className="nav-label">{item?.label ?? 'Unknown'}</span>
             </button>
           ))}
         </div>
@@ -33,14 +35,14 @@ export function Sidebar({ navItems, activeItem, onItemClick }: SidebarProps) {
         {projects.length > 0 && (
           <div className="nav-section">
             <h3 className="nav-section-title">Projects</h3>
-            {projects.map(item => (
+            {projects.map((item, index) => (
               <button
-                key={item.id}
-                className={`nav-item ${activeItem === item.id ? 'active' : ''}`}
-                onClick={() => onItemClick(item.id)}
+                key={item?.id ?? `project-${index}`}
+                className={`nav-item ${activeItem === item?.id ? 'active' : ''}`}
+                onClick={() => onItemClick(item?.id ?? '')}
               >
-                <span className="nav-icon">{item.icon}</span>
-                <span className="nav-label">{item.label}</span>
+                <span className="nav-icon">{item?.icon ?? '🎵'}</span>
+                <span className="nav-label">{item?.label ?? 'Unknown Project'}</span>
               </button>
             ))}
           </div>

@@ -15,24 +15,33 @@ export function WorkflowHeader({
   onEngineChange,
   onClose
 }: WorkflowHeaderProps) {
+  // Defensive: Provide defaults for all props
+  const headerTitle = title ?? 'Music Video Workflow';
+  const validEngines = engines ?? [];
+  const currentEngine = selectedEngine ?? '';
+
   return (
     <header className="workflow-header">
       <div className="workflow-title">
-        <h1>{title}</h1>
+        <h1>{headerTitle}</h1>
       </div>
 
       <div className="workflow-controls">
         <div className="engine-selector">
           <select
-            value={selectedEngine}
+            value={currentEngine}
             onChange={(e) => onEngineChange(e.target.value)}
             className="engine-dropdown"
           >
-            {engines.map(engine => (
-              <option key={engine.id} value={engine.id}>
-                {engine.name}
-              </option>
-            ))}
+            {validEngines.length > 0 ? (
+              validEngines.map((engine, index) => (
+                <option key={engine?.id ?? `engine-${index}`} value={engine?.id ?? ''}>
+                  {engine?.name ?? 'Unknown Engine'}
+                </option>
+              ))
+            ) : (
+              <option value="">No engines available</option>
+            )}
           </select>
           <button className="search-btn" aria-label="Search">
             🔍

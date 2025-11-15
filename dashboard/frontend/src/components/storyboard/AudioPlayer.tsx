@@ -6,8 +6,15 @@ interface AudioPlayerProps {
 }
 
 export function AudioPlayer({ track }: AudioPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(track.isPlaying);
-  const [currentTime, setCurrentTime] = useState(track.currentTime);
+  // Defensive: Provide defaults for all track properties
+  const trackTitle = track?.title ?? 'Untitled Track';
+  const trackArtist = track?.artist ?? 'Unknown Artist';
+  const trackDuration = track?.duration ?? 0;
+  const trackIsPlaying = track?.isPlaying ?? false;
+  const trackCurrentTime = track?.currentTime ?? 0;
+
+  const [isPlaying, setIsPlaying] = useState(trackIsPlaying);
+  const [currentTime, setCurrentTime] = useState(trackCurrentTime);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -15,22 +22,22 @@ export function AudioPlayer({ track }: AudioPlayerProps) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const progressPercentage = (currentTime / track.duration) * 100;
+  const progressPercentage = trackDuration > 0 ? (currentTime / trackDuration) * 100 : 0;
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = (parseFloat(e.target.value) / 100) * track.duration;
+    const newTime = (parseFloat(e.target.value) / 100) * trackDuration;
     setCurrentTime(newTime);
   };
 
   return (
     <div className="audio-player">
       <div className="audio-info">
-        <h3 className="track-title">{track.title}</h3>
-        <p className="track-artist">{track.artist}</p>
+        <h3 className="track-title">{trackTitle}</h3>
+        <p className="track-artist">{trackArtist}</p>
       </div>
 
       <div className="waveform-container">
@@ -69,7 +76,7 @@ export function AudioPlayer({ track }: AudioPlayerProps) {
           onChange={handleSeek}
           className="progress-slider"
         />
-        <span className="time-display">{formatTime(track.duration)}</span>
+        <span className="time-display">{formatTime(trackDuration)}</span>
       </div>
     </div>
   );

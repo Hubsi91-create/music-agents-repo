@@ -6,28 +6,34 @@ interface AgentProgressBarProps {
 }
 
 export function AgentProgressBar({ agent }: AgentProgressBarProps) {
+  // Defensive: Provide defaults for all agent properties
+  const agentId = agent?.id ?? 'unknown';
+  const agentName = agent?.name ?? 'Unknown Agent';
+  const agentProgress = agent?.progress ?? 0;
+  const agentColor = agent?.color ?? '#3B82F6';
+
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setAnimatedProgress(agent.progress);
+      setAnimatedProgress(agentProgress);
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [agent.progress]);
+  }, [agentProgress]);
 
   return (
     <div className="agent-progress-bar">
       <div className="agent-info">
-        <span className="agent-name">Agent {agent.id}: {agent.name}</span>
-        <span className="agent-percentage">{agent.progress}%</span>
+        <span className="agent-name">Agent {agentId}: {agentName}</span>
+        <span className="agent-percentage">{agentProgress}%</span>
       </div>
       <div className="progress-track">
         <div
           className="progress-fill"
           style={{
             width: `${animatedProgress}%`,
-            backgroundColor: agent.color,
+            backgroundColor: agentColor,
             transition: 'width 0.8s ease-out'
           }}
         />
