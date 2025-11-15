@@ -1,4 +1,4 @@
-import { NavItem } from '../../types/storyboard';
+import type { NavItem } from '../../types/storyboard';
 
 interface SidebarProps {
   navItems: NavItem[];

@@ -5,12 +5,12 @@ import { AgentProgressBar } from './AgentProgressBar';
 import { AudioPlayer } from './AudioPlayer';
 import { VideoThumbnailGrid } from './VideoThumbnailGrid';
 import {
-  mockAgentProgress,
-  mockVideoThumbnails,
-  mockAudioTrack,
-  mockEngines,
-  mockNavItems
-} from '../../data/storyboardMockData';
+  useAgentProgress,
+  useVideoThumbnails,
+  useAudioTrack,
+  useEngines,
+  useNavItems,
+} from '../../hooks/useStoryboardApi';
 import './Storyboard.css';
 
 interface StoryboardViewProps {
@@ -19,12 +19,60 @@ interface StoryboardViewProps {
 
 export function StoryboardView({ onBack }: StoryboardViewProps = {}) {
   const [activeNavItem, setActiveNavItem] = useState('home');
-  const [selectedEngine, setSelectedEngine] = useState(mockEngines[0].id);
+  const [selectedEngine, setSelectedEngine] = useState('');
+
+  // API Data Fetching mit React Query
+  const { data: agentProgress, isLoading: isLoadingAgents, isError: isErrorAgents } = useAgentProgress({ refetchInterval: 5000 });
+  const { data: videoThumbnails, isLoading: isLoadingThumbnails, isError: isErrorThumbnails } = useVideoThumbnails();
+  const { data: audioTrack, isLoading: isLoadingAudio, isError: isErrorAudio } = useAudioTrack();
+  const { data: enginesData, isLoading: isLoadingEngines, isError: isErrorEngines } = useEngines();
+  const { data: navItems, isLoading: isLoadingNav, isError: isErrorNav } = useNavItems();
+
+  // Engines aus API-Response extrahieren
+  const engines = enginesData?.engines.map(engine => ({
+    id: engine.id,
+    name: engine.name,
+    type: 'ai' as const, // Alle Runway-Engines sind AI-basiert
+  })) || [];
+
+  // Setze Default-Engine, wenn noch nicht gesetzt
+  if (!selectedEngine && engines.length > 0) {
+    setSelectedEngine(engines[0].id);
+  }
+
+  // Loading State
+  if (isLoadingAgents || isLoadingThumbnails || isLoadingAudio || isLoadingEngines || isLoadingNav) {
+    return (
+      <div className="storyboard-container">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading Storyboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error State
+  if (isErrorAgents || isErrorThumbnails || isErrorAudio || isErrorEngines || isErrorNav) {
+    return (
+      <div className="storyboard-container">
+        <div className="error-container">
+          <h2>Error Loading Storyboard</h2>
+          <p>Failed to load data from the backend. Please check if the backend is running.</p>
+          {onBack && (
+            <button onClick={onBack} className="error-back-button">
+              Go Back
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="storyboard-container">
       <Sidebar
-        navItems={mockNavItems}
+        navItems={navItems || []}
         activeItem={activeNavItem}
         onItemClick={setActiveNavItem}
       />
@@ -32,7 +80,7 @@ export function StoryboardView({ onBack }: StoryboardViewProps = {}) {
       <div className="storyboard-main">
         <WorkflowHeader
           title="Music Video Workflow"
-          engines={mockEngines}
+          engines={engines}
           selectedEngine={selectedEngine}
           onEngineChange={setSelectedEngine}
           onClose={onBack}
@@ -43,7 +91,7 @@ export function StoryboardView({ onBack }: StoryboardViewProps = {}) {
             <div className="agents-section">
               <h2 className="section-title">Agent Progress</h2>
               <div className="agents-list">
-                {mockAgentProgress.map(agent => (
+                {agentProgress?.map(agent => (
                   <AgentProgressBar key={agent.id} agent={agent} />
                 ))}
               </div>
@@ -51,13 +99,13 @@ export function StoryboardView({ onBack }: StoryboardViewProps = {}) {
 
             <div className="bottom-section">
               <div className="audio-section">
-                <AudioPlayer track={mockAudioTrack} />
+                {audioTrack && <AudioPlayer track={audioTrack} />}
               </div>
             </div>
           </div>
 
           <div className="preview-section">
-            <VideoThumbnailGrid thumbnails={mockVideoThumbnails} />
+            <VideoThumbnailGrid thumbnails={videoThumbnails || []} />
           </div>
         </div>
       </div>

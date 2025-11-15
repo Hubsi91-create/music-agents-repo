@@ -1,4 +1,4 @@
-import { VideoThumbnail } from '../../types/storyboard';
+import type { VideoThumbnail } from '../../types/storyboard';
 
 interface ThumbnailCardProps {
   thumbnail: VideoThumbnail;

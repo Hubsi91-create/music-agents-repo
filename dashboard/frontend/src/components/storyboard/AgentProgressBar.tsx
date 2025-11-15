@@ -1,4 +1,4 @@
-import { AgentProgress } from '../../types/storyboard';
+import type { AgentProgress } from '../../types/storyboard';
 import { useEffect, useState } from 'react';
 
 interface AgentProgressBarProps {

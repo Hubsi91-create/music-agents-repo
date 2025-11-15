@@ -1,4 +1,4 @@
-import { Engine } from '../../types/storyboard';
+import type { Engine } from '../../types/storyboard';
 
 interface WorkflowHeaderProps {
   title: string;

@@ -1,4 +1,4 @@
-import { AudioTrack } from '../../types/storyboard';
+import type { AudioTrack } from '../../types/storyboard';
 import { useState } from 'react';
 
 interface AudioPlayerProps {

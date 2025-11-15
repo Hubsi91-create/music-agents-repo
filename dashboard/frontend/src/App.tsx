@@ -9,10 +9,12 @@ import { StoryboardView } from './components/storyboard/StoryboardView'
 function App() {
   const [activeTab, setActiveTab] = useState<'overview' | 'agents' | 'training' | 'metrics' | 'storyboard'>('overview')
 
+  // Render Storyboard as a full-screen view
   if (activeTab === 'storyboard') {
     return <StoryboardView onBack={() => setActiveTab('overview')} />
   }
 
+  // Render main dashboard
   return (
     <div className="app">
       <header className="header">
@@ -46,7 +48,7 @@ function App() {
           Metrics
         </button>
         <button
-          className={activeTab === 'storyboard' ? 'active' : ''}
+          className={''}
           onClick={() => setActiveTab('storyboard')}
         >
           Storyboard

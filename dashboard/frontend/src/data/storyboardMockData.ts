@@ -1,4 +1,4 @@
-import { AgentProgress, VideoThumbnail, AudioTrack, Engine, NavItem } from '../types/storyboard';
+import type { AgentProgress, VideoThumbnail, AudioTrack, Engine, NavItem } from '../types/storyboard';
 
 export const mockAgentProgress: AgentProgress[] = [
   { id: 1, name: 'FanFor Studio', progress: 100, color: '#3B82F6' },
